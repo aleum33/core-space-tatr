@@ -24,7 +24,7 @@ We propose **Core Space Merging**, a theoretically grounded and empirically vali
 
 Experiments on ViT and Transformer models demonstrate superior per-task and averaged performance compared to existing baselines.
 
-![alt text](fig/method.png)
+![alt text](fig/method.jpg)
 
 ---
 
@@ -74,7 +74,7 @@ If you use this code in your research, please cite our paper:
 @inproceedings{panariello2025accurate,
   title     = {Accurate and Efficient Low-Rank Model Merging in Core Space},
   author    = {Panariello, Aniello and Marczak, Daniel and Magistri, Simone and Porrello, Angelo and Twardowski, Bart{\l}omiej and Bagdanov, Andrew D. and Calderara, Simone and van de Weijer, Joost},
-  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  booktitle = {Advances in Neural Information Processing Systems},
   year      = {2025}
 }
 ```
