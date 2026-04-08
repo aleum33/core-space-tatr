@@ -12,7 +12,7 @@ class SCITAIL:
                  task = None,
                  model_name_or_path = None,
                  batch_size=32,
-                 num_workers=16):
+                 num_workers=4):
         
         self.batch_size = batch_size
         self.num_workers = num_workers

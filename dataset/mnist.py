@@ -11,7 +11,7 @@ class MNIST:
                  preprocess,
                  location=ROOT,
                  batch_size=128,
-                 num_workers=16):
+                 num_workers=4):
         if is_train:
             self.train_dataset = datasets.MNIST(
                 root=location,

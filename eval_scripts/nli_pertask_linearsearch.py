@@ -6,8 +6,7 @@ import numpy as np
 import torch
 
 from task_merger import get_merge_handler
-from utils import evaluate_logits, get_config_from_name, prepare_experiment_config, set_seed, parse_eval_args, merge_args_into_task_merge_config
-
+from utils import evaluate_logits, get_config_from_name, prepare_experiment_config, set_seed, parse_eval_args, merge_args_into_task_merge_config, test_format_collapse
 # Set TOKENIZERS_PARALLELISM to true
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
@@ -57,12 +56,14 @@ def run_BIG_function(args):
     order_of_processing_params = [
         'scaling_coeffs',
     ]
+    # ===========================================================================================
     search_config = {
         'scaling_coeffs': np.arange(0.1, 1.0, step=0.2),
         'topK': (np.arange(1, 11, step=1) * 10),
         'dare_pruning_coeffs': [0.99, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 1e-5][::-1],
         'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]
     }
+    # ===========================================================================================
     print(f"default params: {default_params}")
     print(f"order_of_processing_params: {order_of_processing_params}")
 
@@ -95,6 +96,10 @@ def run_BIG_function(args):
         merged_model.config.pad_token_id = 128001
         merged_model.config.use_cache = False
         merged_model.config.pretraining_tp = 1
+
+        # 평가 점수 출력하기 이전에 출력  "meta-llama/Meta-Llama-3-8B"
+        # test_model_generation(merged_model, "meta-llama/Meta-Llama-3-8B")
+        # 여기에 넣게 되면 매번 추력되므로 loop끝나고 한 번에
 
         print('Evaluate Merged Model on Each Dataset')
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -168,6 +173,8 @@ def run_BIG_function(args):
             print(f"Normalized Test results: {test_results}")
             print(test_result)
 
+            # 육안 검사
+            test_format_collapse(Merge, config['task_merge_config'], "meta-llama/Meta-Llama-3-8B", device)
 
 if __name__ == "__main__":
     args = parse_eval_args()

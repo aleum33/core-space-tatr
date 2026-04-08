@@ -441,6 +441,8 @@ class SVDMerger(TaskMerger):
         )
         merged_sV_sd = self.representation_helper.rep_to_state_dict(merged_sV_, task_sVs[0])
 
+
+
         merged_sd = self.reconstruct_merged_sd(U, merged_sV_sd)
 
         if merge_config.get('merge_method') in ('tv', 'sum'):
@@ -679,7 +681,39 @@ class MatrixPerLayerMerger(TaskMerger):
 
                     if merge_config.get('isotropize', False):
                         M_merged = isotropize_matrix(M_merged)
+                    # =========================================================
+                    # 🔥 🌟 CORE SPACE TATR INJECTION (아름님의 오리지널 논리!) 🌟 🔥
+                    # =========================================================
+                    print("TATR 기법 실행")
+                    tatr_k_percent = merge_config.get('tatr_k_percent', 0.95)
 
+                    # 1. Base weight 가져오기
+                    W_base = new_sd.state_dict()[key].to(M_merged.device).float()
+
+                    # 2. Base weight를 Core Space (Tr x Tr)로 투영하여 P_base 생성
+                    # U_B_ref: (d_out, Tr) -> .T 하면 (Tr, d_out)
+                    # Vh_A_ref: (Tr, d_in) -> .T 하면 (d_in, Tr) (V^T의 전치 = V)
+                    # 수학적 원리: P_base = U^T @ W_base @ V
+                    P_base = U_B_ref.float().T @ W_base @ Vh_A_ref.float().T
+
+                    # 3. 간섭 행렬 I 계산 (Core 행렬끼1리 Element-wise 곱)
+                    # M_merged와 P_base 모두 완벽한 (Tr, Tr) 크기의 쪼꼬미 행렬입니다!
+                    I = M_merged * P_base
+
+                    # 4. 동적 임계값 R 계산 (상위 k% 분위수 추출)
+                    R = torch.quantile(torch.abs(I).flatten(), 1.0 - tatr_k_percent)
+
+                    # 5. 클리핑 및 축소 비율(Ratio) 계산
+                    I_clipped = torch.clamp(I, min=-R, max=R)
+                    Ratio = I_clipped / (I + 1e-8)
+
+                    # 6. M_merged 업데이트 (상위 10%의 뾰족한 간섭 억제)
+                    M_merged = (M_merged * Ratio).to(M_merged.dtype)
+
+                    # 7. 메모리 청소 (아주 가벼운 연산이었지만 확실하게!)
+                    del W_base, P_base, I, I_clipped, Ratio
+                    # =========================================================
+                    # 다시 거대 행렬로 복원
                     delta_W = U_B_ref @ M_merged @ Vh_A_ref
 
                     rank = torch.linalg.matrix_rank(delta_W).item()

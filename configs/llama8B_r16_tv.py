@@ -1,5 +1,5 @@
-CACHE_DIR = 'data'          # Path to the cache directory
-MODEL_DIR = ''          # Path to the model directory
+CACHE_DIR = '/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/'          # Path to the cache directory
+MODEL_DIR = '/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/'          # Path to the model directory
 INGREDIENTS_PATH = ""   # Path to the ingredients file (If exists)
 PTM_PATH = ""           # Path to the pre-trained model
 
@@ -74,7 +74,9 @@ config = {
         'representation': 'matrix_per_layer',
         'merge_space': 'full',
         'merge_method': 'tv',
+        'tatr_k_percent': 0.95, # k% 변수 추가
         'scaling_coeffs': .3,
+
         'isotropize': False,
     },
     'eval_type': 'logits',

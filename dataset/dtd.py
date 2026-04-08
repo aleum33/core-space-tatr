@@ -11,7 +11,7 @@ class DTD:
                  preprocess,
                  location=os.path.expanduser('~/data'),
                  batch_size=32,
-                 num_workers=16):
+                 num_workers=4):
         # Data loading code
         traindir = os.path.join(location, 'dtd', 'train')
         valdir = os.path.join(location, 'dtd', 'val')

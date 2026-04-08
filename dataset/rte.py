@@ -8,7 +8,7 @@ class RTE(HuggingFaceDataset):
                  task = None,
                  model_name_or_path = None,
                  batch_size=32,
-                 num_workers=16):
+                 num_workers=4):
         
         super().__init__(location, task, model_name_or_path, batch_size, num_workers)
         

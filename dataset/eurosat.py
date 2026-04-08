@@ -26,7 +26,7 @@ class EuroSATBase:
                  eval_preprocess,
                  location=ROOT,
                  batch_size=32,
-                 num_workers=16):
+                 num_workers=4):
         # Data loading code
         if is_train:
             traindir = os.path.join(location, 'EuroSAT_splits', 'train')

@@ -31,7 +31,7 @@ class HuggingFaceDataset:
                  task=None,
                  model_name_or_path=None,
                  batch_size=32,
-                 num_workers=16):
+                 num_workers=4):
 
         self.batch_size = batch_size
         self.num_workers = num_workers
@@ -44,6 +44,8 @@ class HuggingFaceDataset:
         if getattr(self.tokenizer, "pad_token_id") is None:
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
 
+        # sick 오류 잡기 위해 두줄 삽입해 ㅣ실제 root 확인
+        print(f"🚨 [디버깅] task: {task}, task_ids[task]: {task_ids[task]}, ROOT: {ROOT}")
         dataset = datasets.load_dataset(task_ids[task], cache_dir=ROOT, trust_remote_code=True)
         sentence1_key, sentence2_key = task_to_keys[task]
 

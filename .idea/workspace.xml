@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="82a214bf-11d1-465e-974c-1cbcd3702ddf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/eval_scripts/nli_pertask_linearsearch_ori.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fix_sick.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/merging_functions_ori.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/task_merger_ori.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/llama8B_r16_tv.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs/llama8B_r16_tv.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/cars.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/cars.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/dtd.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dtd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/eurosat.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/eurosat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/huggingface_datasets.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/huggingface_datasets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/qnli.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/qnli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/rte.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/rte.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/scitail.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/scitail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/sun397.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/sun397.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/svhn.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/svhn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval_scripts/nli_pertask_linearsearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval_scripts/nli_pertask_linearsearch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="3AylVUyGcDl5wuOt3J7h44FC5w3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/aleum433/core-space-merging/eval_scripts&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+    <layout>
+      <window_info id="Bookmarks" show_stripe_button="false" side_tool="true" />
+      <window_info id="Merge Requests" show_stripe_button="false" />
+      <window_info id="Commit_Guest" show_stripe_button="false" />
+      <window_info id="Pull Requests" show_stripe_button="false" />
+      <window_info id="Learn" show_stripe_button="false" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20865884" />
+      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
+      <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Find" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" weight="0.054534316" />
+      <window_info anchor="bottom" id="Terminal" order="3" />
+      <window_info anchor="bottom" id="Services" order="4" />
+      <window_info anchor="bottom" id="Python Packages" order="5" weight="0.1" />
+      <window_info anchor="bottom" id="Python Console" order="6" weight="0.1" />
+      <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
+      <window_info anchor="right" id="documentation.v2" show_stripe_button="false" side_tool="true" />
+      <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
+      <window_info anchor="right" id="SciView" show_stripe_button="false" />
+      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+      <window_info anchor="right" id="Plots" order="5" weight="0.1" />
+    </layout>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/eval_scripts" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.53" />
+        <option value="bundled-python-sdk-13a8072ce35e-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="82a214bf-11d1-465e-974c-1cbcd3702ddf" name="Changes" comment="" />
+      <created>1773572716553</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1773572716553</updated>
+      <workItem from="1773572719465" duration="7907000" />
+      <workItem from="1773658480079" duration="3882000" />
+      <workItem from="1773909557682" duration="11061000" />
+      <workItem from="1774185552524" duration="4844000" />
+      <workItem from="1774359005774" duration="2922000" />
+      <workItem from="1774442635785" duration="15224000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dataset/huggingface_datasets.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/task_merger.py</url>
+          <line>469</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/merging_functions.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/merging_functions.py</url>
+          <line>104</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/task_merger.py</url>
+          <line>68</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/task_merger.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/task_merger.py</url>
+          <line>273</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/task_merger_ori.py</url>
+          <line>409</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dataset/sick.py</url>
+          <line>6</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
