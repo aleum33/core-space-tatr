@@ -4,11 +4,12 @@ import os
 import pdb
 import random
 import string
+import gc
 from collections import OrderedDict, defaultdict
 from copy import deepcopy
 from inspect import getmembers, isfunction
 from pathlib import Path
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 import clip
 import numpy as np
@@ -932,70 +933,120 @@ def clamp(x, min_ratio=0, max_ratio=0):
     clamped_x = torch.clamp(x, min, max)
     return clamped_x
 
-
-def test_format_collapse(Merge_instance, merge_config, ptm_path="meta-llama/Meta-Llama-3-8B", device='cuda'):
-    import torch
-    import gc
-    from transformers import AutoTokenizer, AutoModelForCausalLM
-
+def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
+    tatr_threshold = merge_config.get('tatr_k_percent', 'Not Applied')
     print("\n" + "=" * 50)
     print("🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨")
     print("=" * 50)
 
     try:
+        # Tokenizer는 모델 경로(Instruct)에 맞춰 자동으로 불러옵니다.
         test_tokenizer = AutoTokenizer.from_pretrained(ptm_path)
 
         print("최적의 파라미터로 최종 병합 모델 생성 중...")
-        # 1. 최적의 설정값으로 최종 병합된 껍데기(Classification) 모델 생성
         final_merged_model = Merge_instance.merge(merge_config)
 
         print("GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...")
-        # 2. 가중치만 CPU로 복사하여 딕셔너리로 저장
+        # VRAM 확보를 위해 병합된 가중치를 무조건 CPU로 옮깁니다.
         merged_state_dict = {k: v.cpu() for k, v in final_merged_model.state_dict().items()}
-
-        # 3. 껍데기 모델 완전 삭제 및 VRAM 청소
         del final_merged_model
         gc.collect()
         torch.cuda.empty_cache()
 
-        print("대화형 모델 불러오는 중...")
-        # 4. 입이 달린 CausalLM 로드
+        print("대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...")
+        # to(device) 절대 금지! device_map="auto"로 16GB GPU 2개에 쪼개서 로드합니다.
         talk_model = AutoModelForCausalLM.from_pretrained(
             ptm_path,
-            torch_dtype=torch.bfloat16
-        ).to(device)
+            torch_dtype=torch.bfloat16,
+            device_map="balanced"
+        )
 
         print("대화형 모델로 뇌(가중치) 이식 수술 중...")
-        # 5. TATR이 적용된 가중치를 덮어씌움
-        talk_model.load_state_dict(merged_state_dict, strict=False)
+        # 4/12 instruct에 가중치가 들어가지 않는 문제
+        clean_state_dict = {}
+        talk_model_keys = list(talk_model.state_dict().keys())
 
-        # 6. 서버 3에서 썼던 완벽한 Llama-3 포맷 프롬프트!
-        prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n지구의 자전 주기는 몇 시간인지 간단하게 설명해줘.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-        inputs = test_tokenizer(prompt, return_tensors="pt").to(device)
+        for k, v in merged_state_dict.items():
+            # 1. lora_A, lora_B 매트릭스는 이미 base에 더해졌으므로 무시
+            if "lora_" in k:
+                continue
 
-        # 🛑 Llama 3 전용 브레이크 토큰 찾기
+            # 2. PEFT 특유의 '.base_layer' 꼬리표를 싹둑 잘라서 순정 이름표로 번역
+            core_name = k.replace(".base_layer.weight", ".weight")
+            core_name = core_name.split("model.")[-1] if "model." in k else core_name
+
+            # 3. 매칭
+            matched_key = next((tk for tk in talk_model_keys if core_name in tk), None)
+            if matched_key:
+                clean_state_dict[matched_key] = v
+
+            # 덮어쓰기 및 결과 확인
+        missing, unexpected = talk_model.load_state_dict(clean_state_dict, strict=False)
+
+        print(f"✅ 주입 생략(원래 없는) 파라미터: {len(missing)}개 (정상)")
+        print(f"🚨 허공으로 날아간(이름 불일치) 파라미터: {len(unexpected)}개")
+        if len(unexpected) > 0:
+            print(f"⚠️ 경고! 이식 실패 예시: {unexpected[:2]}")
+        # ----------------------------------------------------------------
+        prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nExplain the concepts of Earth's rotation and revolution, and describe in detail how each of them affects our daily lives and the environment on Earth.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+
+        # 🔥 input 데이터는 모델의 첫 번째 레이어가 올라간 GPU로 보내줍니다.
+        inputs = test_tokenizer(prompt, return_tensors="pt").to(talk_model.device)
+
+        # 🛑 Llama 3 Instruct 전용 마침표(브레이크) 토큰 설정
         terminators = [
             test_tokenizer.eos_token_id,
             test_tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
-        print("답변 생성 중...")
-        outputs = talk_model.generate(**inputs, max_new_tokens=100, do_sample=False)
-        response = test_tokenizer.decode(outputs[0], skip_special_tokens=False)
 
-        # 현재 설정된 TATR % 값 가져오기
-        tatr_threshold = merge_config.get('tatr_k_percent', 'Not Applied')
+        print("답변 생성 중...")
+        outputs = talk_model.generate(
+            **inputs,
+            max_new_tokens=300,
+            do_sample= False,  # 🔥 Greedy search복귀
+            # temperature=0.7,
+            eos_token_id=terminators,
+            repetition_penalty=1.2  # 같은 말 반복 방지
+        )
+        #--------------------------------------------
+
+        # 🔥 Base 모델 전용 벼락치기 과외 프롬프트 🔥
+        # prompt = (
+        #     "Question: What is the capital of France?\n"
+        #     "Answer: The capital of France is Paris.\n\n"
+        #     "Question: How many days are in a leap year?\n"
+        #     "Answer: A leap year has 366 days.\n\n"
+        #     "Question: Explain the difference between Earth's rotation and revolution.\n"
+        #     "Answer:"
+        # )
+
+        # inputs = test_tokenizer(prompt, return_tensors="pt").to(talk_model.device)
+
+        # # Base 모델은 eot_id가 없으므로 이것만 씁니다!
+        # terminators = [test_tokenizer.eos_token_id]
+        #
+        # print("답변 생성 중...")
+        # outputs = talk_model.generate(
+        #     **inputs,
+        #     max_new_tokens=150,  # 너무 길면 딴소리하니까 150토큰만!
+        #     do_sample=True,  # 창의성 유지
+        #     temperature=0.7,
+        #     eos_token_id=terminators,
+        #     repetition_penalty=1.2
+        # )
+        input_length = inputs.input_ids.shape[1]
+        response_ids = outputs[0][input_length:]
+        response = test_tokenizer.decode(response_ids, skip_special_tokens=False)
 
         print("\n" + "🔥" * 25)
-        print(f"[충격과 공포의 모델 대답 | TATR Threshold: {tatr_threshold}]")
+        print(f"[모델 대답 | TATR Threshold: {tatr_threshold}]")
         print(response)
         print("🔥" * 25)
 
-    except Exception as e:
-        print(f"테스트 중 에러 발생: {e}")
-    finally:
-        print("=" * 50)
-        # 7. 다음 실험이나 스크립트 종료를 위해 메모리 완전 정리
-        if 'talk_model' in locals():
-            del talk_model
+        # (선택) 테스트가 끝나면 다시 메모리를 비워줍니다.
+        del talk_model
         gc.collect()
         torch.cuda.empty_cache()
+
+    except Exception as e:
+        print(f"육안 검사 중 에러 발생: {e}")

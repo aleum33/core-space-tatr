@@ -1,0 +1,841 @@
+Seed :  420
+Config name :  llama8B_r16_tv.py
+cuda
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'full', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False}
+memory before loading  562.3515625
+memory after loading  2641.671875
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+mask_class labels: [None None None 1 1 2]
+default params: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+order_of_processing_params: ['scaling_coeffs']
+Using Llama fine-tuned acc
+Finetuned Accs: {'snli': 92.4979641693811, 'mnli': 90.30820173204279, 'sick': 91.58173664900121, 'qnli': 94.48512585812358, 'rte': 89.85507246376812, 'scitail': 96.51928504233302}
+{'scaling_coeffs': [0.1, 0.3, 0.5, 0.7, 1.0, 2.0], 'topK': array([ 10,  20,  30,  40,  50,  60,  70,  80,  90, 100]), 'dare_pruning_coeffs': [1e-05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99], 'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]}
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 0.0 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 226.82300734519958
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 86.35
+snli accuracy is 79.872
+mnli Normalized accuracy is 58.948
+mnli accuracy is 53.235
+sick Normalized accuracy is 74.78
+sick accuracy is 68.485
+qnli Normalized accuracy is 54.71
+qnli accuracy is 51.693
+rte Normalized accuracy is 60.849
+rte accuracy is 54.676
+scitail Normalized accuracy is 78.102
+scitail accuracy is 75.383
+Average Accuracy is 63.891
+Average Normalized Accuracy is 68.957
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 237.4724259376526
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 90.909
+snli accuracy is 84.089
+mnli Normalized accuracy is 89.522
+mnli accuracy is 80.846
+sick Normalized accuracy is 77.868
+sick accuracy is 71.313
+qnli Normalized accuracy is 57.905
+qnli accuracy is 54.712
+rte Normalized accuracy is 100.882
+rte accuracy is 90.647
+scitail Normalized accuracy is 97.012
+scitail accuracy is 93.635
+Average Accuracy is 79.207
+Average Normalized Accuracy is 85.683
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 228.1591989994049
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 84.724
+snli accuracy is 78.368
+mnli Normalized accuracy is 86.025
+mnli accuracy is 77.687
+sick Normalized accuracy is 56.25
+sick accuracy is 51.515
+qnli Normalized accuracy is 56.937
+qnli accuracy is 53.797
+rte Normalized accuracy is 99.281
+rte accuracy is 89.209
+scitail Normalized accuracy is 95.74
+scitail accuracy is 92.408
+Average Accuracy is 73.831
+Average Normalized Accuracy is 79.826
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 205.80533456802368
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 76.76
+snli accuracy is 71.002
+mnli Normalized accuracy is 79.03
+mnli accuracy is 71.37
+sick Normalized accuracy is 47.206
+sick accuracy is 43.232
+qnli Normalized accuracy is 54.613
+qnli accuracy is 51.601
+rte Normalized accuracy is 94.477
+rte accuracy is 84.892
+scitail Normalized accuracy is 94.866
+scitail accuracy is 91.564
+Average Accuracy is 68.944
+Average Normalized Accuracy is 74.492
+Early stopping (Param: scaling_coeffs, TATR: 0.0)
+
+✅ [TATR 0.0] 최적의 파라미터 : {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 84.08859987807357, 'snli_norm_acc': 90.90859526820675, 'mnli': 80.84564442180337, 'mnli_norm_acc': 89.52192920603584, 'sick': 71.31313131313132, 'sick_norm_acc': 77.86828894329453, 'qnli': 54.711802378774024, 'qnli_norm_acc': 57.905201355108375, 'rte': 90.64748201438849, 'rte_norm_acc': 100.88187514504526, 'scitail': 93.63496932515338, 'scitail_norm_acc': 97.01166899867255, 'Average_acc': 79.20693822188736, 'Average_norm_acc': 85.68292648606057, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 207.09897303581238
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 90.965
+snli accuracy is 84.141
+mnli Normalized accuracy is 89.804
+mnli accuracy is 81.1
+sick Normalized accuracy is 73.715
+sick accuracy is 67.509
+qnli Normalized accuracy is 57.568
+qnli accuracy is 54.394
+rte Normalized accuracy is 99.194
+rte accuracy is 89.13
+scitail Normalized accuracy is 96.589
+scitail accuracy is 93.227
+Average Accuracy is 78.25
+Average Normalized Accuracy is 84.639
+Normalized Test results [TATR 0.0]: 90.97 & 89.8 & 73.71 & 57.57 & 99.19 & 96.59 & 84.64 \\
+{'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 84.14087947882736, 'snli_norm_acc': 90.96511499944975, 'mnli': 81.10035659704535, 'mnli_norm_acc': 89.8039768720914, 'sick': 67.50917244190788, 'sick_norm_acc': 73.71466726018252, 'qnli': 54.39359267734554, 'qnli_norm_acc': 57.56841850326955, 'rte': 89.13043478260869, 'rte_norm_acc': 99.19354838709675, 'scitail': 93.22671683913453, 'scitail_norm_acc': 96.588693957115, 'Average_acc': 78.25019213614489, 'Average_norm_acc': 84.63906999653416, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+[TATR 0.0] 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+✅ 주입 생략(원래 없는) 파라미터: 2개 (정상)
+🚨 허공으로 날아간(이름 불일치) 파라미터: 0개
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 0.0]
+the a the is requisite itself is that the a which a, ( the itself you the the the the the the the the the the a. the most of of sincerity In makeshift Of herself is the the the a. the the the the the the the the reason,,,,,,,,,,,,,,,,,,,, is is largest of,, is the the the the the the the the is is a  is the the the the the the the the the the the the various the namely The is the the the many is a a1 the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the<|end_of_text|> - The of functionality,,implify, itself of itself for
+ mundane of. the the the the the the the the the the mankind shoreline, belonging and was the is therefore accordingly misconception to memoir, Reid the Cic dignity At Starr preceding itself itself itself itself itself, now itself itself myriad Atmos, nicknamed F, nominate Haley apparatus
+ the youthful merging socio antics
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+ [TATR 0.0] 루프 종료. VRAM 완벽 초기화 완료!
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 0.05 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 211.89641642570496
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 55.758
+snli accuracy is 51.575
+mnli Normalized accuracy is 42.476
+mnli accuracy is 38.36
+sick Normalized accuracy is 41.692
+sick accuracy is 38.182
+qnli Normalized accuracy is 53.838
+qnli accuracy is 50.869
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 65.231
+scitail accuracy is 62.96
+Average Accuracy is 48.957
+Average Normalized Accuracy is 52.774
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 206.53099513053894
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 62.909
+snli accuracy is 58.189
+mnli Normalized accuracy is 44.394
+mnli accuracy is 40.092
+sick Normalized accuracy is 52.059
+sick accuracy is 47.677
+qnli Normalized accuracy is 54.322
+qnli accuracy is 51.327
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 68.965
+scitail accuracy is 66.564
+Average Accuracy is 52.608
+Average Normalized Accuracy is 56.716
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 206.75807237625122
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 68.994
+snli accuracy is 63.818
+mnli Normalized accuracy is 46.933
+mnli accuracy is 42.384
+sick Normalized accuracy is 61.324
+sick accuracy is 56.162
+qnli Normalized accuracy is 54.516
+qnli accuracy is 51.51
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 72.858
+scitail accuracy is 70.322
+Average Accuracy is 55.999
+Average Normalized Accuracy is 60.379
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 204.10087776184082
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 74.399
+snli accuracy is 68.817
+mnli Normalized accuracy is 50.148
+mnli accuracy is 45.288
+sick Normalized accuracy is 68.604
+sick accuracy is 62.828
+qnli Normalized accuracy is 54.516
+qnli accuracy is 51.51
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 77.149
+scitail accuracy is 74.463
+Average Accuracy is 59.117
+Average Normalized Accuracy is 63.744
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 208.67140650749207
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 81.583
+snli accuracy is 75.462
+mnli Normalized accuracy is 54.717
+mnli accuracy is 49.414
+sick Normalized accuracy is 78.309
+sick accuracy is 71.717
+qnli Normalized accuracy is 54.419
+qnli accuracy is 51.418
+rte Normalized accuracy is 59.248
+rte accuracy is 53.237
+scitail Normalized accuracy is 85.014
+scitail accuracy is 82.055
+Average Accuracy is 63.884
+Average Normalized Accuracy is 68.882
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 206.39052987098694
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 89.755
+snli accuracy is 83.022
+mnli Normalized accuracy is 71.697
+mnli accuracy is 64.748
+sick Normalized accuracy is 84.707
+sick accuracy is 77.576
+qnli Normalized accuracy is 54.419
+qnli accuracy is 51.418
+rte Normalized accuracy is 78.464
+rte accuracy is 70.504
+scitail Normalized accuracy is 97.647
+scitail accuracy is 94.248
+Average Accuracy is 73.586
+Average Normalized Accuracy is 79.448
+
+✅ [TATR 0.05] 최적의 파라미터 : {'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 83.02174354805933, 'snli_norm_acc': 89.75521168880103, 'mnli': 64.74783494651044, 'mnli_norm_acc': 71.69651671132421, 'sick': 77.57575757575758, 'sick_norm_acc': 84.70658060686995, 'qnli': 51.41811527904849, 'qnli_norm_acc': 54.419269500954684, 'rte': 70.50359712230215, 'rte_norm_acc': 78.46368066836853, 'scitail': 94.24846625766872, 'scitail_norm_acc': 97.64729008957296, 'Average_acc': 73.58591912155778, 'Average_norm_acc': 79.44809154431522, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.05, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 196.74182653427124
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 89.59
+snli accuracy is 82.868
+mnli Normalized accuracy is 70.244
+mnli accuracy is 63.436
+sick Normalized accuracy is 80.392
+sick accuracy is 73.624
+qnli Normalized accuracy is 53.693
+qnli accuracy is 50.732
+rte Normalized accuracy is 72.581
+rte accuracy is 65.217
+scitail Normalized accuracy is 94.981
+scitail accuracy is 91.675
+Average Accuracy is 71.259
+Average Normalized Accuracy is 76.913
+Normalized Test results [TATR 0.05]: 89.59 & 70.24 & 80.39 & 53.69 & 72.58 & 94.98 & 76.91 \\
+{'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 82.86848534201955, 'snli_norm_acc': 89.58952349510291, 'mnli': 63.43606724401426, 'mnli_norm_acc': 70.24397123113806, 'sick': 73.62413371381982, 'sick_norm_acc': 80.39172045403963, 'qnli': 50.732265446224254, 'qnli_norm_acc': 53.69338822959554, 'rte': 65.21739130434783, 'rte_norm_acc': 72.58064516129032, 'scitail': 91.67450611476951, 'scitail_norm_acc': 94.98050682261207, 'Average_acc': 71.2588081941992, 'Average_norm_acc': 76.91329256562976, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.05, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+[TATR 0.05] 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+✅ 주입 생략(원래 없는) 파라미터: 2개 (정상)
+🚨 허공으로 날아간(이름 불일치) 파라미터: 0개
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 0.05]
+The a the "The a the who a ityF the “ The is all family is this a, that a very ( the. the a,,.
+ the the its a as- the:“ the name
+• the the the [)" the a  the the the ofLevel ofFind a all one is is would is has was's not a  The is is would was She... The is she most the "The you to I a a a  It is the the the the the the the the  is was is is is said of it best,,,, to to in the is the the the the the the the the the theOne’s is You; The the the the  The The of People,, is the many of the " is we the the It is now being The,,,,,,,,,,,,,,,.
+
+The the mainThe of the  is to most the of the the the the the the the the the the the the the the the the the:The the the  The is is is not the people first the— the the the  This the most the "The the most the most the first the most people,,, the " the most,,, and, and is the the That the the the the the the the the the  The is's is's' " is very the The the'is a the the  is not the the the the
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+ [TATR 0.05] 루프 종료. VRAM 완벽 초기화 완료!
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 0.5 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 239.05349683761597
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.001
+snli accuracy is 49.025
+mnli Normalized accuracy is 42.251
+mnli accuracy is 38.156
+sick Normalized accuracy is 37.059
+sick accuracy is 33.939
+qnli Normalized accuracy is 54.032
+qnli accuracy is 51.052
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.277
+scitail accuracy is 62.04
+Average Accuracy is 47.668
+Average Normalized Accuracy is 51.378
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 213.6409661769867
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.209
+snli accuracy is 49.218
+mnli Normalized accuracy is 42.082
+mnli accuracy is 38.003
+sick Normalized accuracy is 37.28
+sick accuracy is 34.141
+qnli Normalized accuracy is 53.838
+qnli accuracy is 50.869
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.436
+scitail accuracy is 62.193
+Average Accuracy is 47.704
+Average Normalized Accuracy is 51.415
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 209.3489589691162
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.748
+snli accuracy is 49.716
+mnli Normalized accuracy is 42.589
+mnli accuracy is 38.462
+sick Normalized accuracy is 38.824
+sick accuracy is 35.556
+qnli Normalized accuracy is 53.838
+qnli accuracy is 50.869
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.833
+scitail accuracy is 62.577
+Average Accuracy is 48.163
+Average Normalized Accuracy is 51.913
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 196.18086767196655
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 54.176
+snli accuracy is 50.112
+mnli Normalized accuracy is 42.646
+mnli accuracy is 38.512
+sick Normalized accuracy is 39.927
+sick accuracy is 36.566
+qnli Normalized accuracy is 53.741
+qnli accuracy is 50.778
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.595
+scitail accuracy is 62.347
+Average Accuracy is 48.352
+Average Normalized Accuracy is 52.122
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 197.3678650856018
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 54.978
+snli accuracy is 50.853
+mnli Normalized accuracy is 42.476
+mnli accuracy is 38.36
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+qnli Normalized accuracy is 53.741
+qnli accuracy is 50.778
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.833
+scitail accuracy is 62.577
+Average Accuracy is 48.724
+Average Normalized Accuracy is 52.524
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 198.78928303718567
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 56.395
+snli accuracy is 52.164
+mnli Normalized accuracy is 42.815
+mnli accuracy is 38.665
+sick Normalized accuracy is 46.986
+sick accuracy is 43.03
+qnli Normalized accuracy is 53.645
+qnli accuracy is 50.686
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 66.343
+scitail accuracy is 64.034
+Average Accuracy is 50.063
+Average Normalized Accuracy is 53.972
+
+✅ [TATR 0.5] 최적의 파라미터 : {'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 52.16419426945743, 'snli_norm_acc': 56.39496473018046, 'mnli': 38.66530820173204, 'mnli_norm_acc': 42.814835707234515, 'sick': 43.03030303030303, 'sick_norm_acc': 46.98568143037318, 'qnli': 50.68618481244281, 'qnli_norm_acc': 53.6446179778094, 'rte': 51.798561151079134, 'rte_norm_acc': 57.64678579716871, 'scitail': 64.03374233128835, 'scitail_norm_acc': 66.34295136272857, 'Average_acc': 50.06304896605047, 'Average_norm_acc': 53.971639500915806, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.5, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 197.51815032958984
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 55.717
+snli accuracy is 51.537
+mnli Normalized accuracy is 40.333
+mnli accuracy is 36.424
+sick Normalized accuracy is 42.199
+sick accuracy is 38.647
+qnli Normalized accuracy is 53.936
+qnli accuracy is 50.961
+rte Normalized accuracy is 46.774
+rte accuracy is 42.029
+scitail Normalized accuracy is 67.398
+scitail accuracy is 65.052
+Average Accuracy is 47.442
+Average Normalized Accuracy is 51.059
+Normalized Test results [TATR 0.5]: 55.72 & 40.33 & 42.2 & 53.94 & 46.77 & 67.4 & 51.06 \\
+{'scaling_coeffs': 2.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 51.53705211726385, 'snli_norm_acc': 55.71695829206559, 'mnli': 36.423841059602644, 'mnli_norm_acc': 40.332816245945565, 'sick': 38.64655523848349, 'sick_norm_acc': 42.19897618517694, 'qnli': 50.961098398169334, 'qnli_norm_acc': 53.93557762170016, 'rte': 42.028985507246375, 'rte_norm_acc': 46.77419354838709, 'scitail': 65.05174035747883, 'scitail_norm_acc': 67.39766081871345, 'Average_acc': 47.441545446374086, 'Average_norm_acc': 51.05936378533147, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.5, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+[TATR 0.5] 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+✅ 주입 생략(원래 없는) 파라미터: 2개 (정상)
+🚨 허공으로 날아간(이름 불일치) 파라미터: 0개
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 0.5]
+The a the "The a the is a  of the a as a which you you a very a name,
+ the of-: the and,.
+the the of was used a a  The is that a the  the the the the  the the of to part is the the the the  the  the  the  is the the the most the  The a the the One alsoG is not one people,,, is now is being is written of the the the
+The a the the the the the the the the the the the the the the the the the the the the the...the of (The of the the the is is is that a the a the the that is I a the the  the the the the the the the the the the the the the the the the the the the the the the the the the the of of of- it is considered is the " the the the the the the of- is the the the the the the the the the main one concept This the is the title of's is the the unique. The is anunique for is one is you all has the the the the the thethe of you one different,,,,,,,,,,,,, with,,,,,,, and is is not your also. the the the the the a  is is " the: the [)1 the a the the the the a best,, ProSeries's the
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+ [TATR 0.5] 루프 종료. VRAM 완벽 초기화 완료!
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 0.95 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 196.2740671634674
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.078
+snli accuracy is 49.096
+mnli Normalized accuracy is 42.194
+mnli accuracy is 38.105
+sick Normalized accuracy is 37.28
+sick accuracy is 34.141
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 63.959
+scitail accuracy is 61.733
+Average Accuracy is 47.639
+Average Normalized Accuracy is 51.349
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 194.02396893501282
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.089
+snli accuracy is 49.106
+mnli Normalized accuracy is 42.476
+mnli accuracy is 38.36
+sick Normalized accuracy is 37.28
+sick accuracy is 34.141
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.039
+scitail accuracy is 61.81
+Average Accuracy is 47.696
+Average Normalized Accuracy is 51.411
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 200.5724391937256
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 52.913
+snli accuracy is 48.943
+mnli Normalized accuracy is 42.42
+mnli accuracy is 38.309
+sick Normalized accuracy is 37.721
+sick accuracy is 34.545
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.039
+scitail accuracy is 61.81
+Average Accuracy is 47.728
+Average Normalized Accuracy is 51.446
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 216.71026158332825
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.012
+snli accuracy is 49.035
+mnli Normalized accuracy is 42.42
+mnli accuracy is 38.309
+sick Normalized accuracy is 37.28
+sick accuracy is 34.141
+qnli Normalized accuracy is 54.129
+qnli accuracy is 51.144
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 63.959
+scitail accuracy is 61.733
+Average Accuracy is 47.693
+Average Normalized Accuracy is 51.408
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 220.61949801445007
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 53.067
+snli accuracy is 49.086
+mnli Normalized accuracy is 42.589
+mnli accuracy is 38.462
+sick Normalized accuracy is 37.28
+sick accuracy is 34.141
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.118
+scitail accuracy is 61.887
+Average Accuracy is 47.722
+Average Normalized Accuracy is 51.439
+Early stopping (Param: scaling_coeffs, TATR: 0.95)
+
+✅ [TATR 0.95] 최적의 파라미터 : {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 48.9433042064621, 'snli_norm_acc': 52.912844780927, 'mnli': 38.30871115639328, 'mnli_norm_acc': 42.41996897475674, 'sick': 34.54545454545455, 'sick_norm_acc': 37.72089917649677, 'qnli': 50.96065873741995, 'qnli_norm_acc': 53.9351122989889, 'rte': 51.798561151079134, 'rte_norm_acc': 57.64678579716871, 'scitail': 61.809815950920246, 'scitail_norm_acc': 64.03882490821464, 'Average_acc': 47.727750957954875, 'Average_norm_acc': 51.44573932275879, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.95, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 208.71411657333374
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 52.526
+snli accuracy is 48.585
+mnli Normalized accuracy is 39.684
+mnli accuracy is 35.838
+sick Normalized accuracy is 35.611
+sick accuracy is 32.613
+qnli Normalized accuracy is 54.008
+qnli accuracy is 51.03
+rte Normalized accuracy is 46.774
+rte accuracy is 42.029
+scitail Normalized accuracy is 64.279
+scitail accuracy is 62.041
+Average Accuracy is 45.356
+Average Normalized Accuracy is 48.814
+Normalized Test results [TATR 0.95]: 52.53 & 39.68 & 35.61 & 54.01 & 46.77 & 64.28 & 48.81 \\
+{'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 48.58509771986971, 'snli_norm_acc': 52.52558600198085, 'mnli': 35.8380030565461, 'mnli_norm_acc': 39.684106614017765, 'sick': 32.61312678353037, 'sick_norm_acc': 35.610950367237926, 'qnli': 51.029748283752866, 'qnli_norm_acc': 54.00823443933156, 'rte': 42.028985507246375, 'rte_norm_acc': 46.77419354838709, 'scitail': 62.041392285983065, 'scitail_norm_acc': 64.27875243664717, 'Average_acc': 45.356058939488086, 'Average_norm_acc': 48.813637234600385, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.95, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+[TATR 0.95] 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+✅ 주입 생략(원래 없는) 파라미터: 2개 (정상)
+🚨 허공으로 날아간(이름 불일치) 파라미터: 0개
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 0.95]
+The a the "the of the is the a 
+The a the ofM’s a and a, the ( the is the a the a.The the is a the a the is the a the book a,.
+ the the  the  the  the the the is that the  the the most a the first a  the most a the the the one is the most a  the a to the very is a the a the a the most a the the the the the the the. a the. The is a the the the is people,, is the the the the the the the the name, is is different, the the the “ the the " the one many.:The of the  the main and the most is is is not the many one people,,,, is the the is the the the the " the following the the the the the the  the the the the the the the the 
+• the the the the the the the the the the the the the the the the the the the the the the is a the the the the the the the the the is the the the the the the the the name, is the the the the the the the you is the one
+The a the you the you the the the the the the the " is the best,,, is the one the a the the  a this the most,,,,,,,,,,,,, and is that the the the
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+ [TATR 0.95] 루프 종료. VRAM 완벽 초기화 완료!
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 1.0 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 195.86257314682007
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 52.968
+snli accuracy is 48.994
+mnli Normalized accuracy is 42.42
+mnli accuracy is 38.309
+sick Normalized accuracy is 37.5
+sick accuracy is 34.343
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.118
+scitail accuracy is 61.887
+Average Accuracy is 47.715
+Average Normalized Accuracy is 51.431
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 198.55395913124084
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 52.99
+snli accuracy is 49.014
+mnli Normalized accuracy is 42.42
+mnli accuracy is 38.309
+sick Normalized accuracy is 37.059
+sick accuracy is 33.939
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.118
+scitail accuracy is 61.887
+Average Accuracy is 47.651
+Average Normalized Accuracy is 51.362
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 201.28205966949463
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 52.858
+snli accuracy is 48.893
+mnli Normalized accuracy is 42.307
+mnli accuracy is 38.207
+sick Normalized accuracy is 37.28
+sick accuracy is 34.141
+qnli Normalized accuracy is 53.935
+qnli accuracy is 50.961
+rte Normalized accuracy is 57.647
+rte accuracy is 51.799
+scitail Normalized accuracy is 64.118
+scitail accuracy is 61.887
+Average Accuracy is 47.648
+Average Normalized Accuracy is 51.357
+Early stopping (Param: scaling_coeffs, TATR: 1.0)
+
+✅ [TATR 1.0] 최적의 파라미터 : {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 48.99410688884373, 'snli_norm_acc': 52.96776780851775, 'mnli': 38.30871115639328, 'mnli_norm_acc': 42.41996897475674, 'sick': 34.34343434343434, 'sick_norm_acc': 37.500309122833045, 'qnli': 50.96065873741995, 'qnli_norm_acc': 53.9351122989889, 'rte': 51.798561151079134, 'rte_norm_acc': 57.64678579716871, 'scitail': 61.88650306748467, 'scitail_norm_acc': 64.1182775445772, 'Average_acc': 47.71532922410918, 'Average_norm_acc': 51.43137025780706, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 1.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 201.1579852104187
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 52.394
+snli accuracy is 48.463
+mnli Normalized accuracy is 39.642
+mnli accuracy is 35.8
+sick Normalized accuracy is 35.678
+sick accuracy is 32.674
+qnli Normalized accuracy is 54.008
+qnli accuracy is 51.03
+rte Normalized accuracy is 46.774
+rte accuracy is 42.029
+scitail Normalized accuracy is 64.327
+scitail accuracy is 62.088
+Average Accuracy is 45.347
+Average Normalized Accuracy is 48.804
+Normalized Test results [TATR 1.0]: 52.39 & 39.64 & 35.68 & 54.01 & 46.77 & 64.33 & 48.8 \\
+{'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 48.46294788273616, 'snli_norm_acc': 52.39352921756356, 'mnli': 35.79979623025981, 'mnli_norm_acc': 39.64179946410944, 'sick': 32.67427639624949, 'sick_norm_acc': 35.6777208991765, 'qnli': 51.029748283752866, 'qnli_norm_acc': 54.00823443933156, 'rte': 42.028985507246375, 'rte_norm_acc': 46.77419354838709, 'scitail': 62.088428974600184, 'scitail_norm_acc': 64.32748538011695, 'Average_acc': 45.34736387914081, 'Average_norm_acc': 48.80382715811419, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 1.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+[TATR 1.0] 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+✅ 주입 생략(원래 없는) 파라미터: 2개 (정상)
+🚨 허공으로 날아간(이름 불일치) 파라미터: 0개
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 1.0]
+The a the "the of the is the a 
+The a the ofM’s a and a, the ( the is the a the a.The the is a the a the is the a the book a,.
+ the the most the “ is" the the. the is.
+This the is the a the the is the one the the the the the the the the the the a,, said has very a the people a the most... the most the the the the the the the the " the the the the most the most the not the first the most is is is is is is is is the one the the the the the the one people, is. you the the the, is the the the the the the the,,, that the the the the " the one  the the the the the the one most,,,,,,,,,,. the the following the the the the the the the the many the most the the the the the the the the the the the the the information is two the the the the the the the the the being
+• the the the the the the main a most the best the " the " the name the " the name the name the " the most of the most the most of ( the  the the " the most the most the most of the most the most, of the the the the the the the  The is this the the the the the the the the the the the the the
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+ [TATR 1.0] 루프 종료. VRAM 완벽 초기화 완료!

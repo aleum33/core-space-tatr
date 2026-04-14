@@ -1,7 +1,7 @@
 import os
 from copy import deepcopy
 import time
-
+import gc
 import numpy as np
 import torch
 
@@ -58,11 +58,13 @@ def run_BIG_function(args):
     ]
     # ===========================================================================================
     search_config = {
-        'scaling_coeffs': np.arange(0.1, 1.0, step=0.2),
+        # 'scaling_coeffs': np.arange(0.1, 1.0, step=0.2),
+        'scaling_coeffs': [0.1, 0.3, 0.5, 0.7, 1.0, 2.0],
         'topK': (np.arange(1, 11, step=1) * 10),
         'dare_pruning_coeffs': [0.99, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 1e-5][::-1],
         'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]
     }
+    tatr_test_cases = [0.0, 0.05, 0.50, 0.95, 1.00]
     # ===========================================================================================
     print(f"default params: {default_params}")
     print(f"order_of_processing_params: {order_of_processing_params}")
@@ -141,40 +143,89 @@ def run_BIG_function(args):
             merge_config=config['task_merge_config'],
         )
 
-        if config['task_merge_config']['ingredients_path'] is None or not os.path.exists(config['task_merge_config']['ingredients_path']):
+        if config['task_merge_config']['ingredients_path'] is None or not os.path.exists(
+                config['task_merge_config']['ingredients_path']):
             Merge.transform(config['task_merge_config'])
 
         print(config['task_merge_config'])
-        early_stopping = EARLY_STOPPING_STEPS
-        for param in order_of_processing_params:
-            best_val_results = {'Average_norm_acc': 0.0}
-            for value in search_config[param]:
-                instance_params = deepcopy(default_params)
-                instance_params[param] = value
-                all_results = merge_and_eval(Merge, EVAL_SPLIT=EVAL_SPLIT, instance_params=instance_params)
-                if (all_results['Average_norm_acc'] >= best_val_results['Average_norm_acc']):
-                    best_val_results = deepcopy(all_results)
-                    early_stopping = EARLY_STOPPING_STEPS
-                else:
-                    early_stopping -= 1
-                    if early_stopping <= 0:
-                        print("Early stopping")
-                        break
-            default_params[param] = best_val_results[param]
 
-        if EVAL_TEST:
-            # Evaluate on the test set with the best topK and scaling co-efficient
-            print("Best params :", best_val_results)
-            for key in search_config.keys():
-                instance_params.update({key: best_val_results[key]})
-            test_result = merge_and_eval(Merge, EVAL_SPLIT='test', instance_params=instance_params)
-            datasets = ['snli', 'mnli', 'sick', 'qnli', 'rte', 'scitail']
-            test_results = " & ".join([f"{np.round(test_result[dataset+'_norm_acc'], 2)}" for dataset in datasets]) + f" & {np.round(test_result['Average_norm_acc'], 2)} \\\\"
-            print(f"Normalized Test results: {test_results}")
-            print(test_result)
+        # 🔥 치명적 오류 방지: 매 TATR 루프마다 초기화할 원본 디폴트 파라미터 백업
+        original_default_params = deepcopy(default_params)
 
-            # 육안 검사
-            test_format_collapse(Merge, config['task_merge_config'], "meta-llama/Meta-Llama-3-8B", device)
+        # ====================================================================
+        # 🌟 대망의 TATR 4연속 자동화 루프 시작 🌟
+        # ====================================================================
+        for tatr_val in tatr_test_cases:
+            print(f"\n\n{'=' * 60}")
+            print(f"🚀🚀🚀 [실험 시작] TATR Threshold: {tatr_val} 🚀🚀🚀")
+            print(f"{'=' * 60}")
+
+            # 1. 현재 루프의 TATR 값을 config에 강제 덮어쓰기
+            config['task_merge_config']['tatr_k_percent'] = tatr_val
+            # 2. 파라미터 탐색 시작점 초기화 (이전 TATR 루프의 오염 방지)
+            current_default_params = deepcopy(original_default_params)
+
+            # ----------------------------------------------------------------
+            # [최적의 파라미터 탐색 (Linear Search)]
+            # ---------------------------------------------------------------
+            for param in order_of_processing_params:
+                best_val_results = {'Average_norm_acc': 0.0}
+                early_stopping = EARLY_STOPPING_STEPS
+
+                for value in search_config[param]:
+                    instance_params = deepcopy(current_default_params)
+                    instance_params[param] = value
+
+                    # 평가 진행
+                    all_results = merge_and_eval(Merge, EVAL_SPLIT=EVAL_SPLIT, instance_params=instance_params)
+
+                    if (all_results['Average_norm_acc'] >= best_val_results['Average_norm_acc']):
+                        best_val_results = deepcopy(all_results)
+                        early_stopping = EARLY_STOPPING_STEPS
+                    else:
+                        early_stopping -= 1
+                        if early_stopping <= 0:
+                            print(f"Early stopping (Param: {param}, TATR: {tatr_val})")
+                            break
+
+                # 최고 성능을 낸 파라미터 업데이트
+                current_default_params[param] = best_val_results[param]
+
+            # ----------------------------------------------------------------
+            # [최종 Test 셋 평가 및 육안 검사 출력]
+            # ----------------------------------------------------------------
+            if EVAL_TEST:
+                print(f"\n✅ [TATR {tatr_val}] 최적의 파라미터 :", best_val_results)
+                for key in search_config.keys():
+                    instance_params.update({key: best_val_results[key]})
+
+                # Test 셋으로 최종 병합 및 평가
+                test_result = merge_and_eval(Merge, EVAL_SPLIT='test', instance_params=instance_params)
+                datasets = ['snli', 'mnli', 'sick', 'qnli', 'rte', 'scitail']
+                test_results_str = " & ".join([f"{np.round(test_result[dataset + '_norm_acc'], 2)}" for dataset in
+                                               datasets]) + f" & {np.round(test_result['Average_norm_acc'], 2)} \\\\"
+
+                print(f"Normalized Test results [TATR {tatr_val}]: {test_results_str}")
+                print(test_result)
+
+                # 🧹 NLI 평가로 더러워진 VRAM 대청소 (OOM 방지)
+                gc.collect()
+                torch.cuda.empty_cache()
+                print("🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!")
+
+                # 🛑 육안 검사 (Base 모델 환경에서 생성)
+                print(f"\n[TATR {tatr_val}] 모델 육안 검사를 시작합니다...")
+                test_format_collapse(
+                    Merge,
+                    config['task_merge_config'],
+                    "meta-llama/Meta-Llama-3-8B-instruct",
+                    device
+                )
+
+                del test_result
+                gc.collect()
+                torch.cuda.empty_cache()
+                print(f" [TATR {tatr_val}] 루프 종료. VRAM 완벽 초기화 완료!")
 
 if __name__ == "__main__":
     args = parse_eval_args()

@@ -36,7 +36,7 @@ config = {
 
     ],
     'model': {
-        'name': 'meta-llama/Meta-Llama-3-8B',
+        'name': 'meta-llama/Meta-Llama-3-8B-instruct',
         'ptm_path': PTM_PATH,
         'cachedir': CACHE_DIR,
         'bases': [
@@ -74,7 +74,7 @@ config = {
         'representation': 'matrix_per_layer',
         'merge_space': 'full',
         'merge_method': 'tv',
-        'tatr_k_percent': 0.95, # k% 변수 추가
+        'tatr_k_percent': 0.00,
         'scaling_coeffs': .3,
 
         'isotropize': False,

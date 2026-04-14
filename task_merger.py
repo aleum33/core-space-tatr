@@ -672,7 +672,7 @@ class MatrixPerLayerMerger(TaskMerger):
                     self._apply_delta(new_sd, key, delta_w)
 
         elif merge_config.get('merge_space') == 'core':
-            for key in tqdm(all_keys, desc="Merging core space"):
+            for key in tqdm(all_keys, desc="Merging core space(tatr)"):
                 key_base = key.replace('.base_layer', '')
                 if key_base in relevant_ab_keys:
                     M_list, U_B_ref, Vh_A_ref = self.get_core_matrices(ftms_params_ab, key_base, merge_config)
@@ -684,8 +684,8 @@ class MatrixPerLayerMerger(TaskMerger):
                     # =========================================================
                     # 🔥 🌟 CORE SPACE TATR INJECTION (아름님의 오리지널 논리!) 🌟 🔥
                     # =========================================================
-                    print("TATR 기법 실행")
-                    tatr_k_percent = merge_config.get('tatr_k_percent', 0.95)
+                    # print("TATR 기법 실행")
+                    tatr_k_percent = merge_config.get('tatr_k_percent', 0.00)
 
                     # 1. Base weight 가져오기
                     W_base = new_sd.state_dict()[key].to(M_merged.device).float()

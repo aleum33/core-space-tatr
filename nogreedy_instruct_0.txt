@@ -1,0 +1,170 @@
+Seed :  420
+Config name :  llama8B_r16_tv.py
+cuda
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'full', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False}
+memory before loading  562.40234375
+memory after loading  2635.79296875
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+mask_class labels: [None None None 1 1 2]
+default params: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+order_of_processing_params: ['scaling_coeffs']
+Using Llama fine-tuned acc
+Finetuned Accs: {'snli': 92.4979641693811, 'mnli': 90.30820173204279, 'sick': 91.58173664900121, 'qnli': 94.48512585812358, 'rte': 89.85507246376812, 'scitail': 96.51928504233302}
+{'scaling_coeffs': array([0.1, 0.3, 0.5, 0.7, 0.9]), 'topK': array([ 10,  20,  30,  40,  50,  60,  70,  80,  90, 100]), 'dare_pruning_coeffs': [1e-05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99], 'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]}
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 205.9247453212738
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 86.35
+snli accuracy is 79.872
+mnli Normalized accuracy is 58.948
+mnli accuracy is 53.235
+sick Normalized accuracy is 74.78
+sick accuracy is 68.485
+qnli Normalized accuracy is 54.71
+qnli accuracy is 51.693
+rte Normalized accuracy is 60.849
+rte accuracy is 54.676
+scitail Normalized accuracy is 78.102
+scitail accuracy is 75.383
+Average Accuracy is 63.891
+Average Normalized Accuracy is 68.957
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 189.7136836051941
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 90.909
+snli accuracy is 84.089
+mnli Normalized accuracy is 89.522
+mnli accuracy is 80.846
+sick Normalized accuracy is 77.868
+sick accuracy is 71.313
+qnli Normalized accuracy is 57.905
+qnli accuracy is 54.712
+rte Normalized accuracy is 100.882
+rte accuracy is 90.647
+scitail Normalized accuracy is 97.012
+scitail accuracy is 93.635
+Average Accuracy is 79.207
+Average Normalized Accuracy is 85.683
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5000000000000001, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 189.06660676002502
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 84.724
+snli accuracy is 78.368
+mnli Normalized accuracy is 86.025
+mnli accuracy is 77.687
+sick Normalized accuracy is 56.25
+sick accuracy is 51.515
+qnli Normalized accuracy is 56.937
+qnli accuracy is 53.797
+rte Normalized accuracy is 99.281
+rte accuracy is 89.209
+scitail Normalized accuracy is 95.74
+scitail accuracy is 92.408
+Average Accuracy is 73.831
+Average Normalized Accuracy is 79.826
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7000000000000001, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 183.58754515647888
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 76.76
+snli accuracy is 71.002
+mnli Normalized accuracy is 79.03
+mnli accuracy is 71.37
+sick Normalized accuracy is 47.206
+sick accuracy is 43.232
+qnli Normalized accuracy is 54.613
+qnli accuracy is 51.601
+rte Normalized accuracy is 94.477
+rte accuracy is 84.892
+scitail Normalized accuracy is 94.866
+scitail accuracy is 91.564
+Average Accuracy is 68.944
+Average Normalized Accuracy is 74.492
+Early stopping
+Best params : {'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 84.08859987807357, 'snli_norm_acc': 90.90859526820675, 'mnli': 80.84564442180337, 'mnli_norm_acc': 89.52192920603584, 'sick': 71.31313131313132, 'sick_norm_acc': 77.86828894329453, 'qnli': 54.711802378774024, 'qnli_norm_acc': 57.905201355108375, 'rte': 90.64748201438849, 'rte_norm_acc': 100.88187514504526, 'scitail': 93.63496932515338, 'scitail_norm_acc': 97.01166899867255, 'Average_acc': 79.20693822188736, 'Average_norm_acc': 85.68292648606057, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 185.2415430545807
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 90.965
+snli accuracy is 84.141
+mnli Normalized accuracy is 89.804
+mnli accuracy is 81.1
+sick Normalized accuracy is 73.715
+sick accuracy is 67.509
+qnli Normalized accuracy is 57.568
+qnli accuracy is 54.394
+rte Normalized accuracy is 99.194
+rte accuracy is 89.13
+scitail Normalized accuracy is 96.589
+scitail accuracy is 93.227
+Average Accuracy is 78.25
+Average Normalized Accuracy is 84.639
+Normalized Test results: 90.97 & 89.8 & 73.71 & 57.57 & 99.19 & 96.59 & 84.64 \\
+{'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 84.14087947882736, 'snli_norm_acc': 90.96511499944975, 'mnli': 81.10035659704535, 'mnli_norm_acc': 89.8039768720914, 'sick': 67.50917244190788, 'sick_norm_acc': 73.71466726018252, 'qnli': 54.39359267734554, 'qnli_norm_acc': 57.56841850326955, 'rte': 89.13043478260869, 'rte_norm_acc': 99.19354838709675, 'scitail': 93.22671683913453, 'scitail_norm_acc': 96.588693957115, 'Average_acc': 78.25019213614489, 'Average_norm_acc': 84.63906999653416, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+모든 평가가 종료되었습니다. 최종 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 0.0]
+**Earth's Rotation:**
+
+Earth's rotation is the movement of our planet around its own axis from west to east. This means that any point on the surface of the Earth moves in a circle around the North Pole (or South Pole) as it spins once every 24 hours. The speed at which this occurs is approximately 1,674 kilometers per hour (km/h), or about 1,040 miles per hour.
+
+Effects on Daily Life:
+
+* **Day-Night Cycle:** As the Earth rotates, different parts of the planet experience day and night due to the changing angle of sunlight. This cycle regulates our circadian rhythms, influencing our sleep-wake patterns, hormone secretion, and overall physiological processes.
+* **Weather Patterns:** Earth's rotation influences global wind patterns, ocean currents, and temperature gradients, shaping local weather conditions like precipitation, humidity, and atmospheric pressure.
+* **Timekeeping:** Our modern concept of time is based on the Earth's rotation period, with minutes and seconds being fractions of an hour. This allows us to coordinate schedules, plan activities, and communicate effectively across vast distances.
+
+Environmental Effects:
+
+* **Climate Zones:** The tilt of the Earth's rotational axis creates seasons by altering the amount of solar radiation received at different latitudes. This leads to diverse ecosystems, climate zones, and regional adaptations among flora and fauna.
+* **Ocean Currents:** Ocean circulation patterns are influenced by winds generated during the Earth's rotation, driving nutrient-rich waters into specific areas, supporting marine
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥

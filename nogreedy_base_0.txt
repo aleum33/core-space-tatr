@@ -1,0 +1,164 @@
+Seed :  420
+Config name :  llama8B_r16_tv.py
+cuda
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'full', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False}
+memory before loading  562.078125
+memory after loading  2688.25
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+mask_class labels: [None None None 1 1 2]
+default params: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+order_of_processing_params: ['scaling_coeffs']
+Using Llama fine-tuned acc
+Finetuned Accs: {'snli': 92.4979641693811, 'mnli': 90.30820173204279, 'sick': 91.58173664900121, 'qnli': 94.48512585812358, 'rte': 89.85507246376812, 'scitail': 96.51928504233302}
+{'scaling_coeffs': array([0.1, 0.3, 0.5, 0.7, 0.9]), 'topK': array([ 10,  20,  30,  40,  50,  60,  70,  80,  90, 100]), 'dare_pruning_coeffs': [1e-05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99], 'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]}
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 219.50895380973816
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 83.099
+snli accuracy is 76.864
+mnli Normalized accuracy is 49.979
+mnli accuracy is 45.135
+sick Normalized accuracy is 70.148
+sick accuracy is 64.242
+qnli Normalized accuracy is 57.421
+qnli accuracy is 54.254
+rte Normalized accuracy is 74.46
+rte accuracy is 66.906
+scitail Normalized accuracy is 75.242
+scitail accuracy is 72.623
+Average Accuracy is 63.338
+Average Normalized Accuracy is 68.391
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 176.8454282283783
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 93.336
+snli accuracy is 86.334
+mnli Normalized accuracy is 94.317
+mnli accuracy is 85.176
+sick Normalized accuracy is 89.339
+sick accuracy is 81.818
+qnli Normalized accuracy is 70.59
+qnli accuracy is 66.697
+rte Normalized accuracy is 98.48
+rte accuracy is 88.489
+scitail Normalized accuracy is 98.124
+scitail accuracy is 94.709
+Average Accuracy is 83.87
+Average Normalized Accuracy is 90.698
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5000000000000001, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 176.31305170059204
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 88.393
+snli accuracy is 81.762
+mnli Normalized accuracy is 92.85
+mnli accuracy is 83.851
+sick Normalized accuracy is 62.206
+sick accuracy is 56.97
+qnli Normalized accuracy is 69.622
+qnli accuracy is 65.782
+rte Normalized accuracy is 99.281
+rte accuracy is 89.209
+scitail Normalized accuracy is 97.091
+scitail accuracy is 93.712
+Average Accuracy is 78.548
+Average Normalized Accuracy is 84.907
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7000000000000001, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 173.3325638771057
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 81.671
+snli accuracy is 75.544
+mnli Normalized accuracy is 86.871
+mnli accuracy is 78.451
+sick Normalized accuracy is 54.045
+sick accuracy is 49.495
+qnli Normalized accuracy is 62.747
+qnli accuracy is 59.286
+rte Normalized accuracy is 96.879
+rte accuracy is 87.05
+scitail Normalized accuracy is 95.82
+scitail accuracy is 92.485
+Average Accuracy is 73.719
+Average Normalized Accuracy is 79.672
+Early stopping
+Best params : {'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 86.3340784393416, 'snli_norm_acc': 93.33619308771782, 'mnli': 85.17575140091697, 'mnli_norm_acc': 94.31673952898039, 'sick': 81.81818181818183, 'sick_norm_acc': 89.33897173380817, 'qnli': 66.6971637694419, 'qnli_norm_acc': 70.59012004661203, 'rte': 88.48920863309353, 'rte_norm_acc': 98.47992573682988, 'scitail': 94.70858895705521, 'scitail_norm_acc': 98.12400590774824, 'Average_acc': 83.87049550300517, 'Average_norm_acc': 90.69765934028275, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+Time taken to merge: 176.44690418243408
+Evaluate Merged Model on Each Dataset
+snli Normalized accuracy is 93.617
+snli accuracy is 86.594
+mnli Normalized accuracy is 95.36
+mnli accuracy is 86.118
+sick Normalized accuracy is 87.981
+sick accuracy is 80.575
+qnli Normalized accuracy is 68.419
+qnli accuracy is 64.645
+rte Normalized accuracy is 100.0
+rte accuracy is 89.855
+scitail Normalized accuracy is 96.93
+scitail accuracy is 93.556
+Average Accuracy is 83.557
+Average Normalized Accuracy is 90.385
+Normalized Test results: 93.62 & 95.36 & 87.98 & 68.42 & 100.0 & 96.93 & 90.38 \\
+{'scaling_coeffs': 0.30000000000000004, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 86.59405537459284, 'snli_norm_acc': 93.61725541983054, 'mnli': 86.11818644931228, 'mnli_norm_acc': 95.36031589338599, 'sick': 80.57480635955973, 'sick_norm_acc': 87.98130425105721, 'qnli': 64.64530892448512, 'qnli_norm_acc': 68.41850326955678, 'rte': 89.85507246376811, 'rte_norm_acc': 99.99999999999999, 'scitail': 93.55597365945437, 'scitail_norm_acc': 96.92982456140349, 'Average_acc': 83.55723387186207, 'Average_norm_acc': 90.38453389920566, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+모든 평가가 종료되었습니다. 최종 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+최적의 파라미터로 최종 병합 모델 생성 중...
+Merging using core - tv
+Isotropizing = False
+Average rank of delta_W across all layers: 96.00
+GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...
+대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...
+대화형 모델로 뇌(가중치) 이식 수술 중...
+답변 생성 중...
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+[모델 대답 | TATR Threshold: 0.0]
+ Rotation refers to Earth spinning on its axis. Revolution refers to Earth traveling around the sun, which takes about 365 days.
+
+Question: Which planet rotates faster than any other planet? (Hint: It’s not Earth.)
+Answer: Mercury
+
+Question: Name two constellations you can see in June at night in North America.
+Answer: Ursa Major and Cassiopeia
+<|end_of_text|>
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
