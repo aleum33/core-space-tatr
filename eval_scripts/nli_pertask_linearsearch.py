@@ -59,7 +59,7 @@ def run_BIG_function(args):
     # ===========================================================================================
     search_config = {
         # 'scaling_coeffs': np.arange(0.1, 1.0, step=0.2),
-        'scaling_coeffs': [0.1, 0.3, 0.5, 0.7, 1.0, 2.0],
+        'scaling_coeffs': [0.1, 0.3, 0.5, 0.7, 0.9, 1.0],
         'topK': (np.arange(1, 11, step=1) * 10),
         'dare_pruning_coeffs': [0.99, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 1e-5][::-1],
         'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]
@@ -133,6 +133,22 @@ def run_BIG_function(args):
 
 
     with torch.no_grad():
+        # instruct 모델로 변경
+        if 'new' in config['models']:
+            del config['models']['new']
+            import gc
+            gc.collect()
+            torch.cuda.empty_cache()
+
+        from transformers import AutoModelForSequenceClassification
+        instruct_model = AutoModelForSequenceClassification.from_pretrained(
+            "meta-llama/Meta-Llama-3-8B-Instruct",
+            torch_dtype=torch.bfloat16,
+            num_labels=3
+            # 🔥 여기서 device_map 옵션을 싹 지웠습니다! (안전하게 로드)
+        )
+        # 이제 프레임워크는 이 '진짜 뇌'를 넘겨받아 덧셈을 시작합니다.
+        config['models']['new'] = instruct_model
         lora_state_dicts = np.array([i for i in config['models']['bases']])
         MergeClass = get_merge_handler(config['task_merge_config']['representation'])
         Merge = MergeClass(
@@ -147,13 +163,14 @@ def run_BIG_function(args):
                 config['task_merge_config']['ingredients_path']):
             Merge.transform(config['task_merge_config'])
 
+
         print(config['task_merge_config'])
 
         # 🔥 치명적 오류 방지: 매 TATR 루프마다 초기화할 원본 디폴트 파라미터 백업
         original_default_params = deepcopy(default_params)
 
         # ====================================================================
-        # 🌟 대망의 TATR 4연속 자동화 루프 시작 🌟
+        # 🌟 대망의 TATR 4연속 자동화 루프 시작
         # ====================================================================
         for tatr_val in tatr_test_cases:
             print(f"\n\n{'=' * 60}")

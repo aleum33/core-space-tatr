@@ -1,7 +1,7 @@
 CACHE_DIR = '/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/'          # Path to the cache directory
 MODEL_DIR = '/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/'          # Path to the model directory
 INGREDIENTS_PATH = ""   # Path to the ingredients file (If exists)
-PTM_PATH = ""           # Path to the pre-trained model
+PTM_PATH = "/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/"           # Path to the pre-trained model
 
 config = {
     'dataset': [
@@ -32,7 +32,7 @@ config = {
         {
             'name': 'scitail',
             'mask_class': 2,
-        },
+        }
 
     ],
     'model': {

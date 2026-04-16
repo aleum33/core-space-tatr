@@ -1,0 +1,332 @@
+Seed :  420
+Config name :  llama8B_r16_tv.py
+cuda
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'full', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False}
+memory before loading  561.4453125
+memory after loading  2639.97265625
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: snli, task_ids[task]: stanfordnlp/snli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: mnli, task_ids[task]: SetFit/mnli, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: sick, task_ids[task]: sick, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: qnli, task_ids[task]: SetFit/qnli, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+🚨 [디버깅] task: rte, task_ids[task]: SetFit/rte, ROOT: 
+mask_class labels: [None None None 1 1 2]
+default params: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+order_of_processing_params: ['scaling_coeffs']
+Using Llama fine-tuned acc
+Finetuned Accs: {'snli': 92.4979641693811, 'mnli': 90.30820173204279, 'sick': 91.58173664900121, 'qnli': 94.48512585812358, 'rte': 89.85507246376812, 'scitail': 96.51928504233302}
+{'scaling_coeffs': [0.1, 0.3, 0.5, 0.7, 0.9, 1.0], 'topK': array([ 10,  20,  30,  40,  50,  60,  70,  80,  90, 100]), 'dare_pruning_coeffs': [1e-05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99], 'cart_pruning_rank': [0.04, 0.08, 0.16, 0.32]}
+{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 0.0 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 2.4308254718780518
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 36.623
+snli accuracy is 33.875
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 38.302
+mnli accuracy is 34.59
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 50.546
+qnli accuracy is 47.758
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 56.045
+rte accuracy is 50.36
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 40.68
+scitail accuracy is 39.264
+Average Accuracy is 40.638
+Average Normalized Accuracy is 43.944
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.3, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 2.115684747695923
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 36.623
+snli accuracy is 33.875
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 38.302
+mnli accuracy is 34.59
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 50.546
+qnli accuracy is 47.758
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 56.045
+rte accuracy is 50.36
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 40.68
+scitail accuracy is 39.264
+Average Accuracy is 40.638
+Average Normalized Accuracy is 43.944
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.5, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 1.696518898010254
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 36.623
+snli accuracy is 33.875
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 38.302
+mnli accuracy is 34.59
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 50.546
+qnli accuracy is 47.758
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 56.045
+rte accuracy is 50.36
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 40.68
+scitail accuracy is 39.264
+Average Accuracy is 40.638
+Average Normalized Accuracy is 43.944
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.7, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 1.5237891674041748
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 36.623
+snli accuracy is 33.875
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 38.302
+mnli accuracy is 34.59
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 50.546
+qnli accuracy is 47.758
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 56.045
+rte accuracy is 50.36
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 40.68
+scitail accuracy is 39.264
+Average Accuracy is 40.638
+Average Normalized Accuracy is 43.944
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.9, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 1.4230899810791016
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 36.623
+snli accuracy is 33.875
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 38.302
+mnli accuracy is 34.59
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 50.546
+qnli accuracy is 47.758
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 56.045
+rte accuracy is 50.36
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 40.68
+scitail accuracy is 39.264
+Average Accuracy is 40.638
+Average Normalized Accuracy is 43.944
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 1.7991199493408203
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 36.623
+snli accuracy is 33.875
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 38.302
+mnli accuracy is 34.59
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 41.471
+sick accuracy is 37.98
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 50.546
+qnli accuracy is 47.758
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 56.045
+rte accuracy is 50.36
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 40.68
+scitail accuracy is 39.264
+Average Accuracy is 40.638
+Average Normalized Accuracy is 43.944
+
+✅ [TATR 0.0] 최적의 파라미터 : {'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 33.87522861207072, 'snli_norm_acc': 36.62267479751103, 'mnli': 34.589913397860414, 'mnli_norm_acc': 38.302073050345506, 'sick': 37.97979797979798, 'sick_norm_acc': 41.47093008878008, 'qnli': 47.75846294602013, 'qnli_norm_acc': 50.54601188522837, 'rte': 50.35971223021583, 'rte_norm_acc': 56.04548619169181, 'scitail': 39.263803680981596, 'scitail_norm_acc': 40.67974981762518, 'Average_acc': 40.63781980782444, 'Average_norm_acc': 43.944487638530326, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+EVAL_SPLIT :  test
+Search Run with: {'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 1.5973083972930908
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+snli Normalized accuracy is 37.779
+snli accuracy is 34.945
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+mnli Normalized accuracy is 37.95
+mnli accuracy is 34.272
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+sick Normalized accuracy is 36.568
+sick accuracy is 33.49
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+qnli Normalized accuracy is 51.223
+qnli accuracy is 48.398
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+rte Normalized accuracy is 66.935
+rte accuracy is 60.145
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...
+평가완료 다음 TATR 루프를 위해 GPU방 비움
+scitail Normalized accuracy is 48.002
+scitail accuracy is 46.331
+Average Accuracy is 42.93
+Average Normalized Accuracy is 46.41
+Normalized Test results [TATR 0.0]: 37.78 & 37.95 & 36.57 & 51.22 & 66.94 & 48.0 & 46.41 \\
+{'scaling_coeffs': 1.0, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9, 'snli': 34.9450325732899, 'snli_norm_acc': 37.77924507538241, 'mnli': 34.271523178807946, 'mnli_norm_acc': 37.94951346777605, 'sick': 33.48960456583775, 'sick_norm_acc': 36.56799465835745, 'qnli': 48.39816933638444, 'qnli_norm_acc': 51.22305643012835, 'rte': 60.14492753623188, 'rte_norm_acc': 66.93548387096774, 'scitail': 46.33113828786453, 'scitail_norm_acc': 48.00194931773879, 'Average_acc': 42.930065913069406, 'Average_norm_acc': 46.40954047005846, 'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'core', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'isotropize': False, 'wandb': 0, 'wandb_project': 'peft_merging', 'use_target_val': 1}
+🧹 NLI 평가 완료 후 찌꺼기 VRAM 청소 완료!
+
+[TATR 0.0] 모델 육안 검사를 시작합니다...
+
+==================================================
+🚨 [육안 검사] TATR 0.0 적용 모델 포맷 붕괴 테스트 🚨
+==================================================
+1. 분류 모델(NLI)에서 병합이 완료된 뇌(Backbone) 추출 중...
+Merging using core - tv
+Isotropizing = False
+2. 대화용(CausalLM) 껍데기 준비 및 뇌 이식 중...
+육안 검사 중 에러 발생: CUDA out of memory. Tried to allocate 1002.00 MiB. GPU 0 has a total capacity of 15.74 GiB of which 538.56 MiB is free. Process 25656 has 15.21 GiB memory in use. Of the allocated memory 13.99 GiB is allocated by PyTorch, and 141.37 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+ [TATR 0.0] 루프 종료. VRAM 완벽 초기화 완료!
+
+
+============================================================
+🚀🚀🚀 [실험 시작] TATR Threshold: 0.05 🚀🚀🚀
+============================================================
+EVAL_SPLIT :  val
+Search Run with: {'scaling_coeffs': 0.1, 'topK': 70, 'cart_pruning_rank': 0.04, 'dare_pruning_coeffs': 0.9}
+Creating Merge
+Merging using core - tv
+Isotropizing = False
+Time taken to merge: 0.9640650749206543
+Evaluate Merged Model on Each Dataset
+
+🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...

@@ -9,7 +9,7 @@ from collections import OrderedDict, defaultdict
 from copy import deepcopy
 from inspect import getmembers, isfunction
 from pathlib import Path
-from transformers import AutoTokenizer, AutoModelForCausalLM
+
 
 import clip
 import numpy as np
@@ -23,7 +23,8 @@ from sklearn.model_selection import train_test_split
 from torch.cuda.amp import GradScaler, autocast
 from torch.nn import CrossEntropyLoss
 from tqdm.auto import tqdm
-from transformers import AutoModelForSequenceClassification
+from transformers import AutoModelForSequenceClassification  # NLI평가에 사용되는 평가 문제O, generate()를 가지고 있지 x
+from transformers import AutoTokenizer, AutoModelForCausalLM # 여기서 generate() 실행. 그래서 각 평가에 맞게 바꿔 끼워줘야 함
 from models.huggingface_clip import get_model_from_config
 
 CONCEPT_TASKS = list(string.ascii_uppercase)
@@ -202,25 +203,60 @@ def step_lr(optimizer, base_lrs, start_lr, warmup_length, steps):
 ##########################################################################################################################
 
 
+from accelerate import dispatch_model, infer_auto_device_map
+from accelerate.hooks import remove_hook_from_module
+
 def evaluate_logits(model, loader, device, mask_class=None, eval=True):
-    """Evaluate a model trained with standard CE on a dataset."""
-    model.to(device)
+    gc.collect()
+    torch.cuda.empty_cache()
+    # =================================================================
+    # 🔥 기적의 코드: 병합이 끝난 모델(CPU)을 평가 직전에 GPU 0과 6으로 분산 배치
+    # =================================================================
+    if next(model.parameters()).device.type == 'cpu':
+        # print("\n🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...")
+        # Llama 구조가 찢어지지 않게 보호하면서 분산 맵 생성
+        d_map = infer_auto_device_map(model, max_memory={0: "13GiB", 1: "5GiB"}, no_split_module_classes=["LlamaDecoderLayer"])
+        model = dispatch_model(model, device_map=d_map)
+
     model.eval()
     correct = 0
     total = 0
+
+    # 모델의 입구(첫 레이어) 주소 추적
+    in_device = next(model.parameters()).device
+
     for batch in tqdm(loader, 'Evaluating model'):
-        batch.to(device)
+        # 문제지를 모델 입구로 정확히 배달
+        if hasattr(batch, 'to'):
+            batch = batch.to(in_device)
+        elif isinstance(batch, dict):
+            batch = {k: v.to(in_device) if hasattr(v, 'to') else v for k, v in batch.items()}
+
         with torch.no_grad():
             outputs = model(**batch)
+
             if mask_class is not None:
                 if eval:
                     outputs.logits[:, mask_class] = -np.inf
                 else:
                     outputs.logits[:, mask_class] = -1e10
+
             predictions = outputs.logits.argmax(dim=-1)
             total += batch["labels"].size(0)
-            correct += (predictions == batch["labels"].to(device)).sum().item()
-    return correct / total
+
+            # 정답지를 모델 출구(마지막 레이어)로 보내서 채점
+            out_device = outputs.logits.device
+            correct += (predictions == batch["labels"].to(out_device)).sum().item()
+
+    acc = correct / total
+    # print("평가완료 다음 TATR 루프를 위해 GPU방 비움")
+    remove_hook_from_module(model, recurse=True)  # accelerate가 걸어둔 분산 로딩 족쇄 풀기
+    model.cpu()                                   # 모델을 다시 CPU 대기실로 돌려보냄
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    return acc
+
 
 
 # evaluates accuracy
@@ -933,108 +969,131 @@ def clamp(x, min_ratio=0, max_ratio=0):
     clamped_x = torch.clamp(x, min, max)
     return clamped_x
 
+# def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
+#     tatr_threshold = merge_config.get('tatr_k_percent', 'Not Applied')
+#     print("\n" + "=" * 50)
+#     print(f"🚨 [육안 검사] TATR {tatr_threshold} 적용 모델 포맷 붕괴 테스트 🚨")
+#     print("=" * 50)
+#
+#     try:
+#         # PTM 경로는 무조건 Instruct로 고정
+#         test_tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
+#
+#         print("최적의 파라미터로 최종 병합 모델 생성 중...")
+#         # 이 모델은 이제 Base 혼종이 아니라, '순수 Instruct + NLI 가중치'의 완벽한 융합체입니다!
+#         talk_model = Merge_instance.merge(merge_config)
+#
+#         # 모델을 평가 모드로 설정
+#         talk_model.to(device)
+#         talk_model.eval()
+#
+#         # Instruct용 자연스러운 영문 프롬프트
+#         prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nExplain the concepts of Earth's rotation and revolution, and describe in detail how each of them affects our daily lives and the environment on Earth.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+#         inputs = test_tokenizer(prompt, return_tensors="pt").to(device)
+#
+#         terminators = [
+#             test_tokenizer.eos_token_id,
+#             test_tokenizer.convert_tokens_to_ids("<|eot_id|>")
+#         ]
+#
+#         print("답변 생성 중 (Greedy Search)...")
+#         outputs = talk_model.generate(
+#             **inputs,
+#             max_new_tokens=300,
+#             do_sample=False,  # 🔥 무작위성 통제 (논문 비교용)
+#             eos_token_id=terminators,
+#             repetition_penalty=1.1  # 정상 수치
+#         )
+#
+#         # 프롬프트 도려내고 순수 답변만 추출
+#         input_length = inputs.input_ids.shape[1]
+#         response_ids = outputs[0][input_length:]
+#         response = test_tokenizer.decode(response_ids, skip_special_tokens=False)
+#
+#         print("\n" + "🔥" * 25)
+#         print(f"[모델 대답 | TATR Threshold: {tatr_threshold}]")
+#         print(response)
+#         print("🔥" * 25)
+#
+#         # 테스트 종료 후 메모리 완벽 정리
+#         del talk_model
+#         gc.collect()
+#         torch.cuda.empty_cache()
+#
+#     except Exception as e:
+#         print(f"육안 검사 중 에러 발생: {e}")
 def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
     tatr_threshold = merge_config.get('tatr_k_percent', 'Not Applied')
     print("\n" + "=" * 50)
-    print("🚨 [육안 검사] TATR 적용 모델 포맷 붕괴 테스트 🚨")
+    print(f"🚨 [육안 검사] TATR {tatr_threshold} 적용 모델 포맷 붕괴 테스트 🚨")
     print("=" * 50)
 
     try:
-        # Tokenizer는 모델 경로(Instruct)에 맞춰 자동으로 불러옵니다.
-        test_tokenizer = AutoTokenizer.from_pretrained(ptm_path)
+        from transformers import AutoTokenizer, AutoModelForCausalLM
+        from accelerate import dispatch_model, infer_auto_device_map
+        import torch
+        import gc
 
-        print("최적의 파라미터로 최종 병합 모델 생성 중...")
-        final_merged_model = Merge_instance.merge(merge_config)
+        test_tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
 
-        print("GPU 메모리 확보 중 (기존 모델 CPU 이동 후 삭제)...")
-        # VRAM 확보를 위해 병합된 가중치를 무조건 CPU로 옮깁니다.
-        merged_state_dict = {k: v.cpu() for k, v in final_merged_model.state_dict().items()}
-        del final_merged_model
+        print("1. 분류 모델(NLI)에서 병합이 완료된 뇌(Backbone) 추출 중...")
+        merged_cls_model = Merge_instance.merge(merge_config)
+
+        print("2. 대화용(CausalLM) 껍데기 준비 및 뇌 이식 중...")
+        talk_model = AutoModelForCausalLM.from_pretrained(
+            "meta-llama/Meta-Llama-3-8B-Instruct",
+            torch_dtype=torch.bfloat16,
+            device_map="cpu"
+        )
+
+        cls_state_dict = merged_cls_model.model.state_dict()
+        clean_state_dict = {}
+        for k, v in cls_state_dict.items():
+            new_key = k.replace("base_model.model.", "")
+            clean_state_dict[new_key] = v
+
+        talk_model.model.load_state_dict(clean_state_dict, strict=False)
+
+        # =================================================================
+        # 🔥 메모리 최적화 1: 수술 끝났으니 옛날 모델 잔해 완벽히 폐기!
+        # =================================================================
+        del merged_cls_model
+        del cls_state_dict
+        del clean_state_dict
         gc.collect()
         torch.cuda.empty_cache()
 
-        print("대화형 모델 불러오는 중 (Multi-GPU 분산 로딩)...")
-        # to(device) 절대 금지! device_map="auto"로 16GB GPU 2개에 쪼개서 로드합니다.
-        talk_model = AutoModelForCausalLM.from_pretrained(
-            ptm_path,
-            torch_dtype=torch.bfloat16,
-            device_map="balanced"
-        )
+        # =================================================================
+        # 🔥 메모리 최적화 2: 무식한 to(device) 버리고, 12GB/4GB 분산 로딩 적용!
+        # =================================================================
+        print("3. 대화형 모델을 GPU에 안전하게 분산 로딩 중...")
+        d_map = infer_auto_device_map(talk_model, max_memory={0: "13GiB", 1: "13GiB"},
+                                      no_split_module_classes=["LlamaDecoderLayer"])
+        talk_model = dispatch_model(talk_model, device_map=d_map)
+        talk_model.eval()
 
-        print("대화형 모델로 뇌(가중치) 이식 수술 중...")
-        # 4/12 instruct에 가중치가 들어가지 않는 문제
-        clean_state_dict = {}
-        talk_model_keys = list(talk_model.state_dict().keys())
-
-        for k, v in merged_state_dict.items():
-            # 1. lora_A, lora_B 매트릭스는 이미 base에 더해졌으므로 무시
-            if "lora_" in k:
-                continue
-
-            # 2. PEFT 특유의 '.base_layer' 꼬리표를 싹둑 잘라서 순정 이름표로 번역
-            core_name = k.replace(".base_layer.weight", ".weight")
-            core_name = core_name.split("model.")[-1] if "model." in k else core_name
-
-            # 3. 매칭
-            matched_key = next((tk for tk in talk_model_keys if core_name in tk), None)
-            if matched_key:
-                clean_state_dict[matched_key] = v
-
-            # 덮어쓰기 및 결과 확인
-        missing, unexpected = talk_model.load_state_dict(clean_state_dict, strict=False)
-
-        print(f"✅ 주입 생략(원래 없는) 파라미터: {len(missing)}개 (정상)")
-        print(f"🚨 허공으로 날아간(이름 불일치) 파라미터: {len(unexpected)}개")
-        if len(unexpected) > 0:
-            print(f"⚠️ 경고! 이식 실패 예시: {unexpected[:2]}")
-        # ----------------------------------------------------------------
         prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nExplain the concepts of Earth's rotation and revolution, and describe in detail how each of them affects our daily lives and the environment on Earth.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+        inputs = test_tokenizer(prompt, return_tensors="pt")
 
-        # 🔥 input 데이터는 모델의 첫 번째 레이어가 올라간 GPU로 보내줍니다.
-        inputs = test_tokenizer(prompt, return_tensors="pt").to(talk_model.device)
+        # 데이터(질문)를 모델의 첫 번째 GPU(0번)로 정확히 배달
+        in_device = next(talk_model.parameters()).device
+        inputs = {k: v.to(in_device) for k, v in inputs.items()}
 
-        # 🛑 Llama 3 Instruct 전용 마침표(브레이크) 토큰 설정
         terminators = [
             test_tokenizer.eos_token_id,
             test_tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
 
-        print("답변 생성 중...")
+        print("답변 생성 중 (Greedy Search 통제 환경)...")
         outputs = talk_model.generate(
             **inputs,
             max_new_tokens=300,
-            do_sample= False,  # 🔥 Greedy search복귀
-            # temperature=0.7,
+            do_sample=False,
             eos_token_id=terminators,
-            repetition_penalty=1.2  # 같은 말 반복 방지
+            repetition_penalty=1.1
         )
-        #--------------------------------------------
 
-        # 🔥 Base 모델 전용 벼락치기 과외 프롬프트 🔥
-        # prompt = (
-        #     "Question: What is the capital of France?\n"
-        #     "Answer: The capital of France is Paris.\n\n"
-        #     "Question: How many days are in a leap year?\n"
-        #     "Answer: A leap year has 366 days.\n\n"
-        #     "Question: Explain the difference between Earth's rotation and revolution.\n"
-        #     "Answer:"
-        # )
-
-        # inputs = test_tokenizer(prompt, return_tensors="pt").to(talk_model.device)
-
-        # # Base 모델은 eot_id가 없으므로 이것만 씁니다!
-        # terminators = [test_tokenizer.eos_token_id]
-        #
-        # print("답변 생성 중...")
-        # outputs = talk_model.generate(
-        #     **inputs,
-        #     max_new_tokens=150,  # 너무 길면 딴소리하니까 150토큰만!
-        #     do_sample=True,  # 창의성 유지
-        #     temperature=0.7,
-        #     eos_token_id=terminators,
-        #     repetition_penalty=1.2
-        # )
-        input_length = inputs.input_ids.shape[1]
+        input_length = inputs["input_ids"].shape[1]
         response_ids = outputs[0][input_length:]
         response = test_tokenizer.decode(response_ids, skip_special_tokens=False)
 
@@ -1043,7 +1102,12 @@ def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
         print(response)
         print("🔥" * 25)
 
-        # (선택) 테스트가 끝나면 다시 메모리를 비워줍니다.
+        # =================================================================
+        # 🔥 메모리 최적화 3: 다음 루프를 위해 철저하게 퇴실 청소!
+        # =================================================================
+        from accelerate.hooks import remove_hook_from_module
+        remove_hook_from_module(talk_model, recurse=True)
+        talk_model.cpu()
         del talk_model
         gc.collect()
         torch.cuda.empty_cache()
