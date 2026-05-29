@@ -489,7 +489,9 @@ class MatrixPerLayerMerger(TaskMerger):
     def _apply_delta(self, new_sd, key, delta_w):
         for name, param in new_sd.named_parameters():
             if name == key:
-                param.data += self.scaling_coeffs * delta_w.type_as(param.data)
+                # 🔥 Bfloat16 Truncation 방지: float32로 정밀도를 올려서 안전하게 더한 뒤, 다시 원상복구!
+                original_dtype = param.data.dtype
+                param.data = (param.data.float() + self.scaling_coeffs * delta_w.float()).to(original_dtype)
 
     def _process_ties(self, tensor_list, topK=10):
         original_shape = tensor_list[0].shape
@@ -681,10 +683,7 @@ class MatrixPerLayerMerger(TaskMerger):
 
                     if merge_config.get('isotropize', False):
                         M_merged = isotropize_matrix(M_merged)
-                    # =========================================================
-                    # 🔥 🌟 CORE SPACE TATR INJECTION (아름님의 오리지널 논리!) 🌟 🔥
-                    # =========================================================
-                    # print("TATR 기법 실행")
+            
                     tatr_k_percent = merge_config.get('tatr_k_percent', 0.00)
 
                     # 1. Base weight 가져오기
@@ -710,7 +709,7 @@ class MatrixPerLayerMerger(TaskMerger):
                     # 6. M_merged 업데이트 (상위 10%의 뾰족한 간섭 억제)
                     M_merged = (M_merged * Ratio).to(M_merged.dtype)
 
-                    # 7. 메모리 청소 (아주 가벼운 연산이었지만 확실하게!)
+                    # 7. 메모리 청소 (아주 가벼운 연산이었지만 확실하게)
                     del W_base, P_base, I, I_clipped, Ratio
                     # =========================================================
                     # 다시 거대 행렬로 복원

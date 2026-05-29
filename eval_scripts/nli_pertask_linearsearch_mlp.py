@@ -9,7 +9,6 @@ from task_merger import get_merge_handler
 from utils import evaluate_logits, get_config_from_name, prepare_experiment_config, set_seed, parse_eval_args, \
     merge_args_into_task_merge_config, test_format_collapse
 
-# Set TOKENIZERS_PARALLELISM to true
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
 
@@ -32,18 +31,18 @@ def run_BIG_function(args):
 
     EARLY_STOPPING_STEPS = 3
 
-    # TASK_HEADS_PATH = "data/llama-3.2-1B/heads.pt" if '1B' in config_name else "heads.pt"
     TASK_HEADS_PATH = "heads_mlp.pt"
     # ===========================================================================================
-    # 🌟 [자동화 주입] 터미널에서 주입한 변수들 가져오기
+    # [자동화 주입] 터미널에서 주입한 변수들 가져오기
+    # 터미널에서 변수를 안 주면 기본값으로 cuda, TATR 0.0, Scale 1.0이 들어갑니다.
     # ===========================================================================================
     env_device = os.environ.get('TARGET_DEVICE', 'cuda' if torch.cuda.is_available() else 'cpu')
     device = env_device
 
-    env_tatr = float(os.environ.get('TATR_VAL', 0.0))
-    env_scale = float(os.environ.get('SCALE_VAL', 1.0))
+    # env_tatr = float(os.environ.get('TATR_VAL', 0.0))
+    # env_scale = float(os.environ.get('SCALE_VAL', 1.0))
 
-    print(f"\n🚀 [실행 환경 세팅] Device: {device} | TATR: {env_tatr} | Scaling: {env_scale} 🚀\n")
+    # print(f"\n🚀 [실행 환경 세팅] Device: {device} | TATR: {env_tatr} | Scaling: {env_scale} 🚀\n")
     # ===========================================================================================
 
     raw_config = get_config_from_name(config_name, device=device)
@@ -60,7 +59,7 @@ def run_BIG_function(args):
         'topK': 70,
         'cart_pruning_rank': 0.04,
         'dare_pruning_coeffs': 0.9
-    }  # Default config
+    }
 
     order_of_processing_params = [
         'scaling_coeffs',
@@ -70,14 +69,28 @@ def run_BIG_function(args):
     # 🌟 [자동화 단일] 하나의 좌표만 확인
     # ===========================================================================================
 
+    # search_config = {
+    #     'topK': 70,
+    #     'dare_pruning_coeffs': 0.9,
+    #     'cart_pruning_rank': 0.04,
+    #     'scaling_coeffs': [env_scale],
+    # }
+    # tatr_test_cases = [env_tatr]
+    # ===========================================================================================
+    # 🌟 [자동화 루프] 최적의 scaling 값을 찾아 육안 검사
+    # ===========================================================================================
+
+    # print(f"\n🚀 [실행 환경 세팅] Device: {device} (자동화 루프 실행) 🚀\n")
+    #
     search_config = {
         'topK': 70,
         'dare_pruning_coeffs': 0.9,
         'cart_pruning_rank': 0.04,
-        'scaling_coeffs': [env_scale],
+        'scaling_coeffs': [0.05, 0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 2.5],
     }
-    tatr_test_cases = [env_tatr]
+    tatr_test_cases = [0.0, 0.01, 0.05, 0.1]
 
+    # ===========================================================================================
     print(f"default params: {default_params}")
     print(f"order_of_processing_params: {order_of_processing_params}")
 

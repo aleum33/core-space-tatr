@@ -1,6 +1,0 @@
-Seed :  420
-Config name :  llama8B_r16_tv.py
-cuda
-{'ingredients_path': '', 'representation': 'matrix_per_layer', 'merge_space': 'full', 'merge_method': 'tv', 'tatr_k_percent': 0.0, 'scaling_coeffs': 0.3, 'isotropize': False}
-memory before loading  562.453125
-memory after loading  2626.75

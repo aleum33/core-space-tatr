@@ -23,8 +23,8 @@ from sklearn.model_selection import train_test_split
 from torch.cuda.amp import GradScaler, autocast
 from torch.nn import CrossEntropyLoss
 from tqdm.auto import tqdm
-from transformers import AutoModelForSequenceClassification  # NLI평가에 사용되는 평가 문제O, generate()를 가지고 있지 x
-from transformers import AutoTokenizer, AutoModelForCausalLM # 여기서 generate() 실행. 그래서 각 평가에 맞게 바꿔 끼워줘야 함
+from transformers import AutoModelForSequenceClassification 
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from models.huggingface_clip import get_model_from_config
 
 CONCEPT_TASKS = list(string.ascii_uppercase)
@@ -202,21 +202,11 @@ def step_lr(optimizer, base_lrs, start_lr, warmup_length, steps):
 ################################################## TRAIN/EVAL FUNCTIONS ##################################################
 ##########################################################################################################################
 
-
-from accelerate import dispatch_model, infer_auto_device_map
-from accelerate.hooks import remove_hook_from_module
-
 def evaluate_logits(model, loader, device, mask_class=None, eval=True):
     gc.collect()
     torch.cuda.empty_cache()
-    # =================================================================
-    # 🔥 기적의 코드: 병합이 끝난 모델(CPU)을 평가 직전에 GPU 0과 6으로 분산 배치
-    # =================================================================
     if next(model.parameters()).device.type == 'cpu':
-        # print("\n🚀 [메모리 최적화] 모델을 GPU 0번(14GB)과 6번(4GB)으로 안전하게 분산 로딩합니다...")
-        # Llama 구조가 찢어지지 않게 보호하면서 분산 맵 생성
-        d_map = infer_auto_device_map(model, max_memory={0: "13GiB", 1: "5GiB"}, no_split_module_classes=["LlamaDecoderLayer"])
-        model = dispatch_model(model, device_map=d_map)
+        model = model.to(device)
 
     model.eval()
     correct = 0
@@ -249,9 +239,7 @@ def evaluate_logits(model, loader, device, mask_class=None, eval=True):
             correct += (predictions == batch["labels"].to(out_device)).sum().item()
 
     acc = correct / total
-    # print("평가완료 다음 TATR 루프를 위해 GPU방 비움")
-    remove_hook_from_module(model, recurse=True)  # accelerate가 걸어둔 분산 로딩 족쇄 풀기
-    model.cpu()                                   # 모델을 다시 CPU 대기실로 돌려보냄
+    model.cpu()
     gc.collect()
     torch.cuda.empty_cache()
 
@@ -592,9 +580,22 @@ def prepare_llama(config, device):
             lora_state_dict = torch.load(base_path, map_location='cpu')
             bases.append(lora_state_dict)
         else:
-            # Load just the LoRA adapter state dict from HF
-            adapter_model = PeftModel.from_pretrained(model=ptm_model, model_id=base_path)
-            bases.append(get_peft_model_state_dict(adapter_model))
+            # 🔥 PEFT의 깐깐한 모델 씌우기 검사를 아예 무시하고, 가중치 파일만 직통으로 읽어옵니다!
+            from peft import load_peft_weights
+
+            possible_local_path = os.path.abspath(base_path)
+
+
+            if os.path.exists(possible_local_path):
+                target_path = possible_local_path
+                print(f"\n📥 [Local] 내 컴퓨터의 가중치를 읽습니다: {target_path}")
+            else:
+                target_path = base_path
+                print(f"\n☁️ [Hub] Hugging Face 허브에서 다운로드합니다: {target_path}")
+
+            lora_state_dict = load_peft_weights(target_path, device="cpu")
+            bases.append(lora_state_dict)
+    # =================================================================
 
     if model_name_or_path == 'meta-llama/Meta-Llama-3-8B':
         ptm_model_path = 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_pretrained_model'
@@ -969,64 +970,13 @@ def clamp(x, min_ratio=0, max_ratio=0):
     clamped_x = torch.clamp(x, min, max)
     return clamped_x
 
-# def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
-#     tatr_threshold = merge_config.get('tatr_k_percent', 'Not Applied')
-#     print("\n" + "=" * 50)
-#     print(f"🚨 [육안 검사] TATR {tatr_threshold} 적용 모델 포맷 붕괴 테스트 🚨")
-#     print("=" * 50)
-#
-#     try:
-#         # PTM 경로는 무조건 Instruct로 고정
-#         test_tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
-#
-#         print("최적의 파라미터로 최종 병합 모델 생성 중...")
-#         # 이 모델은 이제 Base 혼종이 아니라, '순수 Instruct + NLI 가중치'의 완벽한 융합체입니다!
-#         talk_model = Merge_instance.merge(merge_config)
-#
-#         # 모델을 평가 모드로 설정
-#         talk_model.to(device)
-#         talk_model.eval()
-#
-#         # Instruct용 자연스러운 영문 프롬프트
-#         prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nExplain the concepts of Earth's rotation and revolution, and describe in detail how each of them affects our daily lives and the environment on Earth.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-#         inputs = test_tokenizer(prompt, return_tensors="pt").to(device)
-#
-#         terminators = [
-#             test_tokenizer.eos_token_id,
-#             test_tokenizer.convert_tokens_to_ids("<|eot_id|>")
-#         ]
-#
-#         print("답변 생성 중 (Greedy Search)...")
-#         outputs = talk_model.generate(
-#             **inputs,
-#             max_new_tokens=300,
-#             do_sample=False,  # 🔥 무작위성 통제 (논문 비교용)
-#             eos_token_id=terminators,
-#             repetition_penalty=1.1  # 정상 수치
-#         )
-#
-#         # 프롬프트 도려내고 순수 답변만 추출
-#         input_length = inputs.input_ids.shape[1]
-#         response_ids = outputs[0][input_length:]
-#         response = test_tokenizer.decode(response_ids, skip_special_tokens=False)
-#
-#         print("\n" + "🔥" * 25)
-#         print(f"[모델 대답 | TATR Threshold: {tatr_threshold}]")
-#         print(response)
-#         print("🔥" * 25)
-#
-#         # 테스트 종료 후 메모리 완벽 정리
-#         del talk_model
-#         gc.collect()
-#         torch.cuda.empty_cache()
-#
-#     except Exception as e:
-#         print(f"육안 검사 중 에러 발생: {e}")
 def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
     tatr_threshold = merge_config.get('tatr_k_percent', 'Not Applied')
-    print("\n" + "=" * 50)
-    print(f"🚨 [육안 검사] TATR {tatr_threshold} 적용 모델 포맷 붕괴 테스트 🚨")
-    print("=" * 50)
+    applied_scaling = merge_config.get('scaling_coeffs', 'Unknown')
+
+    print("\n" + "=" * 60)
+    print(f"🚨 [육안 검사] TATR {tatr_threshold} | Scaling {applied_scaling} 극한 주입 테스트 🚨")
+    print("=" * 60)
 
     try:
         from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -1049,68 +999,213 @@ def test_format_collapse(Merge_instance, merge_config, ptm_path, device):
         cls_state_dict = merged_cls_model.model.state_dict()
         clean_state_dict = {}
         for k, v in cls_state_dict.items():
-            new_key = k.replace("base_model.model.", "")
+            # 🔥 철저한 이름표 필터링
+            new_key = k.replace("base_model.model.", "").replace(".base_layer", "")
+            # 만약 talk_model이 'model.layers'를 원한다면 접두사를 맞춰줍니다.
+            if not new_key.startswith("model."):
+                new_key = "model." + new_key
             clean_state_dict[new_key] = v
 
-        talk_model.model.load_state_dict(clean_state_dict, strict=False)
+        # 🚨 수술 경과 보고서 출력 (성공 여부 확인용)
+        load_info = talk_model.load_state_dict(clean_state_dict, strict=False)
+        print("\n🏥 [뇌 이식 수술 결과 보고]")
+        print(f" - 누락된 부품(Missing keys): {len(load_info.missing_keys)}개 (lm_head만 있으면 정상!)")
+        if len(load_info.missing_keys) > 2:
+            print(f" - ⚠️ 주의: 가중치가 제대로 이식되지 않았습니다! {load_info.missing_keys[:3]}")
+        print("-" * 40)
 
-        # =================================================================
-        # 🔥 메모리 최적화 1: 수술 끝났으니 옛날 모델 잔해 완벽히 폐기!
-        # =================================================================
-        del merged_cls_model
-        del cls_state_dict
-        del clean_state_dict
+        # 메모리 정리 1
+        del merged_cls_model, cls_state_dict, clean_state_dict
         gc.collect()
         torch.cuda.empty_cache()
 
-        # =================================================================
-        # 🔥 메모리 최적화 2: 무식한 to(device) 버리고, 12GB/4GB 분산 로딩 적용!
-        # =================================================================
-        print("3. 대화형 모델을 GPU에 안전하게 분산 로딩 중...")
-        d_map = infer_auto_device_map(talk_model, max_memory={0: "13GiB", 1: "13GiB"},
-                                      no_split_module_classes=["LlamaDecoderLayer"])
-        talk_model = dispatch_model(talk_model, device_map=d_map)
+        print("3. 대화형 모델을 GPU에 단일 로딩 중...")
+
+        talk_model = talk_model.to(device)
         talk_model.eval()
 
-        prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nExplain the concepts of Earth's rotation and revolution, and describe in detail how each of them affects our daily lives and the environment on Earth.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-        inputs = test_tokenizer(prompt, return_tensors="pt")
 
-        # 데이터(질문)를 모델의 첫 번째 GPU(0번)로 정확히 배달
-        in_device = next(talk_model.parameters()).device
-        inputs = {k: v.to(in_device) for k, v in inputs.items()}
+
+        # =================================================================
+        # 🚨 [벤치마크] Format Integrity Score (FIS) 50개 프롬프트 세트
+        # =================================================================
+        raw_prompts = [
+            # 과학 (Science)
+            "Explain Earth's rotation in valid JSON format with keys 'concept' and 'effect'.",
+            "Give me 2 brief facts about Mars in valid JSON format with keys 'fact1' and 'fact2'.",
+            "Write a brief summary of gravity in valid JSON format with keys 'definition' and 'discoverer'.",
+            "List the 3 states of matter in valid JSON format with a single key 'states' containing a list.",
+            "Explain photosynthesis briefly in valid JSON format with keys 'process' and 'output'.",
+            "What is a black hole? Answer in JSON format with keys 'what_is_it' and 'danger_level'.",
+            "Describe the water cycle in JSON format with keys 'step1', 'step2', and 'step3'.",
+            "What is DNA? Provide the answer in JSON with keys 'acronym' and 'function'.",
+            "Name 2 renewable energy sources in JSON format with keys 'source1' and 'source2'.",
+            "Explain the concept of velocity in JSON format with keys 'term' and 'formula'.",
+            # 역사 (History)
+            "Who was Albert Einstein? Answer in JSON format with keys 'name', 'profession', and 'famous_for'.",
+            "Provide details about the year the Titanic sank in JSON format with keys 'ship', 'year', and 'location'.",
+            "List 2 ancient civilizations in JSON format with a key 'civilizations' as a list.",
+            "Who painted the Mona Lisa? Answer in JSON with keys 'artist' and 'year_completed'.",
+            "Describe the Industrial Revolution briefly in JSON with keys 'era' and 'impact'.",
+            "When did World War II end? Answer in JSON with keys 'event' and 'end_year'.",
+            "Who was the first President of the United States? Use JSON with keys 'name' and 'term'.",
+            "Provide a fact about the Roman Empire in JSON with keys 'empire' and 'fact'.",
+            "What was the Apollo 11 mission? Describe in JSON with keys 'mission' and 'achievement'.",
+            "Name 2 famous inventors in JSON format with keys 'inventor1' and 'inventor2'.",
+            # 지리 (Geography)
+            "What is the capital of France? Answer in JSON format with keys 'country' and 'capital'.",
+            "List the 5 oceans in JSON format with a key 'oceans' containing a list of strings.",
+            "What is the highest mountain in the world? Answer in JSON with keys 'mountain' and 'height'.",
+            "Name 2 countries in South America in JSON format with keys 'country1' and 'country2'.",
+            "What is the longest river in the world? Use JSON with keys 'river' and 'location'.",
+            "Provide the population of Tokyo in JSON format with keys 'city' and 'population_estimate'.",
+            "List 3 states in the USA in JSON with a key 'states'.",
+            "What is the largest desert in the world? Answer in JSON with keys 'desert' and 'type'.",
+            "Which continent is Australia in? Answer in JSON with keys 'country' and 'continent'.",
+            "Name the capital of Canada in JSON with keys 'country' and 'capital'.",
+            # 기술 및 IT (Technology)
+            "List 3 popular programming languages in JSON format with a key 'languages'.",
+            "What does CPU stand for? Answer in JSON format with keys 'acronym' and 'meaning'.",
+            "Explain what a database is in JSON with keys 'term' and 'definition'.",
+            "Name 2 operating systems in JSON format with keys 'os1' and 'os2'.",
+            "What is Cloud Computing? Answer in JSON with keys 'concept' and 'benefit'.",
+            "Provide a brief definition of AI in JSON with keys 'term' and 'definition'.",
+            "Who founded Microsoft? Answer in JSON with keys 'company' and 'founders'.",
+            "What is an IP address? Describe in JSON with keys 'term' and 'function'.",
+            "Name 2 web browsers in JSON with keys 'browser1' and 'browser2'.",
+            "What is cybersecurity? Answer in JSON with keys 'field' and 'purpose'.",
+            # 일반 상식 (General Knowledge)
+            "What is the main ingredient in guacamole? Answer in JSON with keys 'dish' and 'main_ingredient'.",
+            "List 3 colors of the rainbow in JSON with a key 'colors'.",
+            "How many days are in a leap year? Answer in JSON with keys 'year_type' and 'days'.",
+            "What is the currency of Japan? Answer in JSON with keys 'country' and 'currency'.",
+            "Name a mammal that can fly in JSON format with keys 'animal' and 'ability'.",
+            "Who wrote 'Romeo and Juliet'? Answer in JSON with keys 'title' and 'author'.",
+            "What is the chemical symbol for water? Answer in JSON with keys 'substance' and 'symbol'.",
+            "How many players are on a soccer team? Answer in JSON with keys 'sport' and 'players_per_team'.",
+            "What is the freezing point of water in Celsius? Answer in JSON with keys 'substance' and 'freezing_point_c'.",
+            "Name 2 types of fruit in JSON format with keys 'fruit1' and 'fruit2'."
+        ]
+
+        # Llama-3 Instruct 템플릿 씌우기
+        prompts = [
+            f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{p}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+            for p in raw_prompts
+        ]
 
         terminators = [
             test_tokenizer.eos_token_id,
             test_tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
 
-        print("답변 생성 중 (Greedy Search 통제 환경)...")
-        outputs = talk_model.generate(
-            **inputs,
-            max_new_tokens=300,
-            do_sample=False,
-            eos_token_id=terminators,
-            repetition_penalty=1.1
-        )
+        import json
+        import re
+        success_count = 0
 
-        input_length = inputs["input_ids"].shape[1]
-        response_ids = outputs[0][input_length:]
-        response = test_tokenizer.decode(response_ids, skip_special_tokens=False)
+        print(f"\n 벤치마크: Format Integrity Score (FIS) 측정 시작 (총 {len(prompts)}개 프롬프트)")
+        print("=" * 60)
 
-        print("\n" + "🔥" * 25)
-        print(f"[모델 대답 | TATR Threshold: {tatr_threshold}]")
-        print(response)
-        print("🔥" * 25)
+        for i, prompt in enumerate(prompts):
+            inputs = test_tokenizer(prompt, return_tensors="pt")
+            inputs = {k: v.to(device) for k, v in inputs.items()}
 
-        # =================================================================
-        # 🔥 메모리 최적화 3: 다음 루프를 위해 철저하게 퇴실 청소!
-        # =================================================================
-        from accelerate.hooks import remove_hook_from_module
-        remove_hook_from_module(talk_model, recurse=True)
-        talk_model.cpu()
+            outputs = talk_model.generate(
+                **inputs, max_new_tokens=128, do_sample=False,
+                eos_token_id=terminators, repetition_penalty=1.1
+            )
+
+            response = test_tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+
+            is_valid_format = False
+            parsed_json_str = ""
+
+            # UI 마크다운 깨짐 방지용 변수 처리
+            backticks = "```"
+            pattern = rf"{backticks}(?:json)?\s*(.*?)\s*{backticks}"
+
+            match = re.search(pattern, response, re.DOTALL)
+
+            if match:
+                parsed_json_str = match.group(1)
+            else:
+                start_idx = response.find('{')
+                end_idx = response.rfind('}')
+
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    parsed_json_str = response[start_idx:end_idx + 1]
+
+            if parsed_json_str.strip():
+                try:
+                    json.loads(parsed_json_str)
+                    is_valid_format = True
+                except json.JSONDecodeError:
+                    is_valid_format = False
+
+
+            if is_valid_format:
+                success_count += 1
+                if i < 5:
+                    print(f"\n [테스트 {i + 1}/50] (육안 검사용 샘플 출력)")
+                    print("-" * 50)
+                    print(response)
+                    print("-" * 50)
+                    print(f"  결과: ✅ 완벽한 JSON 포맷 (파싱 성공!)")
+                else:
+                    # 6번째부터는 깔끔하게 한 줄 로그만 출력
+                    print(f"[{i + 1:02d}/50] ✅ 성공")
+
+            else:
+                print(f"\n[{i + 1:02d}/50] ❌ 붕괴 감지! (JSON 파싱 실패)")
+                print(f"망가진 텍스트 미리보기: {response[:100]}...\n")
+
+        fis_score = (success_count / len(prompts)) * 100
+
+        print("\n" + "🔥" * 30)
+        print(f"🏆 최종 Format Integrity Score (FIS): {fis_score:.1f}% ({success_count}/50)")
+        print(f"(TATR Threshold: {tatr_threshold} | Applied Scaling: {applied_scaling})")
+        print("🔥" * 30)
+
+    # VRAM 캐시 정리
         del talk_model
         gc.collect()
         torch.cuda.empty_cache()
 
+        return success_count
+
     except Exception as e:
-        print(f"육안 검사 중 에러 발생: {e}")
+        print(f"육안 검사 및 벤치마크 중 에러 발생: {e}")
+
+    #     prompt = "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nExplain the concepts of Earth's rotation and revolution, and describe in detail how each of them affects our daily lives and the environment on Earth.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+    #     inputs = test_tokenizer(prompt, return_tensors="pt")
+    #     # in_device = next(talk_model.parameters()).device
+    #     inputs = {k: v.to(device) for k, v in inputs.items()}
+    #
+    #     terminators = [
+    #         test_tokenizer.eos_token_id,
+    #         test_tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    #     ]
+    #
+    #     print("답변 생성 중 (Greedy Search)...")
+    #     outputs = talk_model.generate(
+    #         **inputs,
+    #         max_new_tokens=300,
+    #         do_sample=False,
+    #         eos_token_id=terminators,
+    #         repetition_penalty=1.1
+    #     )
+    #
+    #     input_length = inputs["input_ids"].shape[1]
+    #     response_ids = outputs[0][input_length:]
+    #     response = test_tokenizer.decode(response_ids, skip_special_tokens=False)
+    #
+    #     print("\n" + "🔥" * 25)
+    #     print(f"[모델 대답 | TATR Threshold: {tatr_threshold} | Scaling: {applied_scaling}]")
+    #     print(response)
+    #     print("🔥" * 25)
+    #
+    #     del talk_model
+    #     gc.collect()
+    #     torch.cuda.empty_cache()
+    #
+    # except Exception as e:
+    #     print(f"육안 검사 중 에러 발생: {e}")

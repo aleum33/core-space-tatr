@@ -1,6 +1,8 @@
 CACHE_DIR = '/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/'          # Path to the cache directory
 MODEL_DIR = '/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/'          # Path to the model directory
-INGREDIENTS_PATH = ""   # Path to the ingredients file (If exists)
+# INGREDIENTS_PATH = ""   # Path to the ingredients file (If exists)
+INGREDIENTS_PATH = ""
+
 PTM_PATH = "/home/aleum433/shared/hdd_ext/ssd4000/aleum/data/"           # Path to the pre-trained model
 
 config = {
@@ -40,21 +42,30 @@ config = {
         'ptm_path': PTM_PATH,
         'cachedir': CACHE_DIR,
         'bases': [
-            # Path to model checkpoints stored locally
-            # f'{MODEL_DIR}/llama/selected/snli.pt',
-            # f'{MODEL_DIR}/llama/selected/mnli.pt',
-            # f'{MODEL_DIR}/llama/selected/sick.pt',
-            # f'{MODEL_DIR}/llama/selected/qnli.pt',
-            # f'{MODEL_DIR}/llama/selected/rte.pt',
-            # f'{MODEL_DIR}/llama/selected/scitail.pt',
+            # mini train
+            # './lora-llama3-8b-snli-full',
+            # './lora-llama3-8b-mnli-full',
+            # './lora-llama3-8b-sick-full',
+            # './lora-llama3-8b-qnli-full',
+            # './lora-llama3-8b-rte-full',
+            # './lora-llama3-8b-scitail-full'
 
             # HF models IDs
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_snli',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_mnli',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_sick',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_qnli',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_rte',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_scitail',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_snli',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_mnli',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_sick',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_qnli',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_rte',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_scitail',
+
+            #total train
+            './output_snli_final',
+            './output_mnli_final',
+            './output_sick_final',
+            './output_qnli_final',
+            './output_rte_final',
+            './output_scitail_final',
+
         ],
         'ft_config': {
             'type': 'lora',
@@ -66,13 +77,14 @@ config = {
             'r': 16,
             'lora_alpha': 16,
             'lora_dropout': 0.1,
-            'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj"]
+            'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj","gate_proj", "up_proj", "down_proj"]
+            # 'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj"]
         },
     },
     'task_merge_config': {
         'ingredients_path': INGREDIENTS_PATH,
         'representation': 'matrix_per_layer',
-        'merge_space': 'full',
+        'merge_space': 'core',
         'merge_method': 'tv',
         'tatr_k_percent': 0.00,
         'scaling_coeffs': .3,

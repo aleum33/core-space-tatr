@@ -14,3 +14,15 @@ logs*
 plots
 lora_rank*
 vera_rank*
+*.txt
+.env
+.env.*
+.ipynb_checkpoints/
+.DS_Store
+venv/
+env/
+mini_train/
+output_*_final/
+*.safetensors
+*.json
+*.jinja
