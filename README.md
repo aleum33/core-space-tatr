@@ -59,9 +59,9 @@ core-space-merging/
 
 ## 🙏 Acknowledgements
 
-본 프로젝트는 아래 논문 및 공식 저장소의 코드를 기반으로(Fork) 진행되었으며, 2026-1 아주대학교 Softcon 자기주도연구 목적에 맞게 확장 및 수정되었습니다. 훌륭한 베이스라인 코드를 오픈소스로 공개해 주신 원작자분들께 깊은 감사를 드립니다[cite: 2].
+본 프로젝트는 아래 논문 및 공식 저장소의 코드를 기반으로(Fork) 진행되었으며, 2026-1 아주대학교 Softcon 자기주도연구 목적에 맞게 확장 및 수정되었습니다. 훌륭한 베이스라인 코드를 오픈소스로 공개해 주신 원작자분들께 깊은 감사를 드립니다.
 
-* **Paper:** [Accurate and Efficient Low-Rank Model Merging in Core Space (NeurIPS 2025)](https://arxiv.org/abs/2509.17786)[cite: 2]
-* **Original Repository:** [apanariello4/core-space-merging](https://github.com/apanariello4/core-space-merging)[cite: 2]
+* **Paper:** [Accurate and Efficient Low-Rank Model Merging in Core Space (NeurIPS 2025)](https://arxiv.org/abs/2509.17786)
+* **Original Repository:** [apanariello4/core-space-merging](https://github.com/apanariello4/core-space-merging)
 
-또한, 원본 저장소의 저자들이 영감을 받고 기반으로 삼았다고 밝힌 [KnOTS](https://github.com/gstoica27/KnOTS) 프로젝트의 저자분들께도 감사의 뜻을 전합니다[cite: 2]. 본 프로젝트는 원본과 동일하게 Apache License 2.0을 준수합니다[cite: 1, 2].
+또한, 원본 저장소의 저자들이 영감을 받고 기반으로 삼았다고 밝힌 [KnOTS](https://github.com/gstoica27/KnOTS) 프로젝트의 저자분들께도 감사의 뜻을 전합니다. 본 프로젝트는 원본과 동일하게 Apache License 2.0을 준수합니다.
