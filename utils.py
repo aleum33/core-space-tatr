@@ -23,7 +23,7 @@ from sklearn.model_selection import train_test_split
 from torch.cuda.amp import GradScaler, autocast
 from torch.nn import CrossEntropyLoss
 from tqdm.auto import tqdm
-from transformers import AutoModelForSequenceClassification 
+from transformers import AutoModelForSequenceClassification
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from models.huggingface_clip import get_model_from_config
 
@@ -600,10 +600,12 @@ def prepare_llama(config, device):
     if model_name_or_path == 'meta-llama/Meta-Llama-3-8B':
         ptm_model_path = 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_pretrained_model'
         base_model = PeftModel.from_pretrained(model=ptm_model, model_id=ptm_model_path)
-    else:
-        base_model = get_peft_model(ptm_model, peft_config)  # Load LoRA model
-
-    # base_model = get_peft_model(base_model, peft_config)  # Load LoRA model
+    # else: base_model is already the correctly-wired PeftModel from line 576.
+    # A redundant get_peft_model(ptm_model, peft_config) used to be called here,
+    # double-wrapping an already-PEFT-wrapped model (see the "modifying a model
+    # with PEFT for a second time" warning this used to raise) and silently
+    # leaving mlp.{gate,up,down}_proj without LoRA modules while q/k/v/o_proj
+    # were unaffected.
     print("memory after loading ", process.memory_info().rss / 1024**2)
     return {
         'bases': bases,

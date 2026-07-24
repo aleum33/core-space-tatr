@@ -42,22 +42,29 @@ config = {
         'ptm_path': PTM_PATH,
         'cachedir': CACHE_DIR,
         'bases': [
+            # mini train
+            # './lora-llama3-8b-snli-full',
+            # './lora-llama3-8b-mnli-full',
+            # './lora-llama3-8b-sick-full',
+            # './lora-llama3-8b-qnli-full',
+            # './lora-llama3-8b-rte-full',
+            # './lora-llama3-8b-scitail-full'
 
             # HF models IDs
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_snli',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_mnli',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_sick',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_qnli',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_rte',
-            'hoffman-lab/KnOTS-Llama3_8B_lora_R16_scitail',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_snli',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_mnli',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_sick',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_qnli',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_rte',
+            # 'hoffman-lab/KnOTS-Llama3_8B_lora_R16_scitail',
 
             #total train
-            # './output_snli_final',
-            # './output_mnli_final',
-            # './output_sick_final',
-            # './output_qnli_final',
-            # './output_rte_final',
-            # './output_scitail_final',
+            './output_snli_final',
+            './output_mnli_final',
+            './output_sick_final',
+            './output_qnli_final',
+            './output_rte_final',
+            './output_scitail_final',
 
         ],
         'ft_config': {
@@ -70,8 +77,8 @@ config = {
             'r': 16,
             'lora_alpha': 16,
             'lora_dropout': 0.1,
-            # 'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj","gate_proj", "up_proj", "down_proj"]
-            'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj"]
+            'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj","gate_proj", "up_proj", "down_proj"]
+            # 'target_modules': ["q_proj", "k_proj", "v_proj", "o_proj"]
         },
     },
     'task_merge_config': {

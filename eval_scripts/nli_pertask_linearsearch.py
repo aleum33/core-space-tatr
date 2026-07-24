@@ -7,7 +7,7 @@ import torch
 
 from task_merger import get_merge_handler
 from utils import evaluate_logits, get_config_from_name, prepare_experiment_config, set_seed, parse_eval_args, \
-    merge_args_into_task_merge_config, test_format_collapse
+    merge_args_into_task_merge_config
 
 # Set TOKENIZERS_PARALLELISM to true
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
@@ -30,20 +30,24 @@ def run_BIG_function(args):
     config_name = args.config
     print("Config name : ", config_name)
 
+    # 🌟 Early Stopping 기준 스텝 수 설정
     EARLY_STOPPING_STEPS = 3
 
-    # TASK_HEADS_PATH = "data/llama-3.2-1B/heads.pt" if '1B' in config_name else "heads.pt"
-    TASK_HEADS_PATH = "heads_mlp.pt"
+    TASK_HEADS_PATH = "data/llama-3.2-1B/heads.pt" if '1B' in config_name else "heads.pt"
+
     # ===========================================================================================
-    # 🌟 [자동화 주입] 터미널에서 주입한 변수들 가져오기
+    # 🌟 [Grid Search 범위 설정]
     # ===========================================================================================
     env_device = os.environ.get('TARGET_DEVICE', 'cuda' if torch.cuda.is_available() else 'cpu')
     device = env_device
 
-    env_tatr = float(os.environ.get('TATR_VAL', 0.0))
-    env_scale = float(os.environ.get('SCALE_VAL', 1.0))
+    # 탐색하고 싶으신 TATR 임계값들과 Scaling Coefficient 후보군들
+    tatr_test_cases = [0.001,0.003, 0.005, 0.007]
+    scaling_coeff_cases = [0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
 
-    print(f"\n🚀 [실행 환경 세팅] Device: {device} | TATR: {env_tatr} | Scaling: {env_scale} 🚀\n")
+    print(f"\n🚀 [Grid Search 시작 - NLI 점수 전용] Device: {device}")
+    print(f"📊 탐색할 TATR 후보군: {tatr_test_cases}")
+    print(f"📊 탐색할 Scaling 후보군: {scaling_coeff_cases}\n")
     # ===========================================================================================
 
     raw_config = get_config_from_name(config_name, device=device)
@@ -67,16 +71,14 @@ def run_BIG_function(args):
     ]
 
     # ===========================================================================================
-    # 🌟 [자동화 단일] 하나의 좌표만 확인
+    # 🌟 [자동화 설정 주입] 지정한 후보군 리스트 적용
     # ===========================================================================================
-
     search_config = {
         'topK': 70,
         'dare_pruning_coeffs': 0.9,
         'cart_pruning_rank': 0.04,
-        'scaling_coeffs': [env_scale],
+        'scaling_coeffs': scaling_coeff_cases,
     }
-    tatr_test_cases = [env_tatr]
 
     print(f"default params: {default_params}")
     print(f"order_of_processing_params: {order_of_processing_params}")
@@ -145,9 +147,10 @@ def run_BIG_function(args):
         lora_state_dicts = np.array([i for i in config['models']['bases']])
         original_default_params = deepcopy(default_params)
 
+        # Outer Loop: TATR 수치들을 순회
         for tatr_val in tatr_test_cases:
             print(f"\n{'=' * 60}")
-            print(f"🚀 [실험 시작] TATR Threshold: {tatr_val} 🚀")
+            print(f"🚀 [격자 탐색 중] TATR Threshold: {tatr_val} 🚀")
             print(f"{'=' * 60}")
 
             config['task_merge_config']['tatr_k_percent'] = tatr_val
@@ -162,35 +165,38 @@ def run_BIG_function(args):
                 merge_config=config['task_merge_config'],
             )
 
-            if config['task_merge_config']['ingredients_path'] is None or not os.path.exists(
-                    config['task_merge_config']['ingredients_path']):
-                Merge.transform(config['task_merge_config'])
+            # Mask 갱신을 위해 transform 수행
+            Merge.transform(config['task_merge_config'])
 
             print("✅ 적용된 Merge Config:", config['task_merge_config'])
 
             for param in order_of_processing_params:
                 best_val_results = {'Average_norm_acc': 0.0}
-                early_stopping = EARLY_STOPPING_STEPS
+                early_stopping = EARLY_STOPPING_STEPS  # 각 파라미터 검색 시작 시 카운터 초기화
 
+                # Inner Loop: Scaling Coeffs 수치들을 순회
                 for value in search_config[param]:
                     instance_params = deepcopy(current_default_params)
                     instance_params[param] = value
 
                     all_results = merge_and_eval(Merge, EVAL_SPLIT=EVAL_SPLIT, instance_params=instance_params)
 
+                    # 성능이 향상되거나 같으면 최고점 갱신 후 early stopping 카운터 복구
                     if (all_results['Average_norm_acc'] >= best_val_results['Average_norm_acc']):
                         best_val_results = deepcopy(all_results)
                         early_stopping = EARLY_STOPPING_STEPS
                     else:
+                        # 성능이 꺾이기 시작하면 카운터 차감
                         early_stopping -= 1
+                        print(f"📉 성능 하락 감지! Early Stopping 카운트다운: {early_stopping}/{EARLY_STOPPING_STEPS}")
                         if early_stopping <= 0:
-                            print(f"⚠️ Early stopping 발생 (Param: {param}, TATR: {tatr_val}에서 조기 종료 조치)")
+                            print(f"⚠️ [조기 종료] Param: {param} | TATR: {tatr_val} 에서 {EARLY_STOPPING_STEPS}회 연속 성능 하락으로 루프 탈출!")
                             break
 
                 current_default_params[param] = best_val_results[param]
 
             if EVAL_TEST:
-                print(f"\n🏆 [TATR {tatr_val}] 평가 완료. 최종 파라미터:", best_val_results)
+                print(f"\n🏆 [TATR {tatr_val}] 최적 검증점수 매칭 완료. 최종 파라미터:", best_val_results)
 
                 for key in search_config.keys():
                     instance_params.update({key: best_val_results[key]})
@@ -205,26 +211,7 @@ def run_BIG_function(args):
                 del test_result
                 gc.collect()
                 torch.cuda.empty_cache()
-                print("🧹 NLI Test 평가 완료. VRAM 캐시 정리 완료!")
-
-                print(f"\n👀 [TATR {tatr_val}] 모델 텍스트 생성 육안 검사 및 벤치마크를 시작합니다...")
-
-                stress_config = deepcopy(config['task_merge_config'])
-                stress_config.update(instance_params)
-
-                optimal_scaling = stress_config['scaling_coeffs']
-                print(f"👉 적용된 최적 Scaling 값: {optimal_scaling}")
-
-                test_format_collapse(
-                    Merge,
-                    stress_config,
-                    "meta-llama/Meta-Llama-3-8B-instruct",
-                    device
-                )
-
-                gc.collect()
-                torch.cuda.empty_cache()
-                print(f"✅ [TATR {tatr_val}] 루프 및 육안 검사 종료. VRAM 완벽 초기화 완료!")
+                print(f"✅ [TATR {tatr_val}] 루프 종료 및 VRAM 완벽 초기화 완료!\n")
 
 
 if __name__ == "__main__":
