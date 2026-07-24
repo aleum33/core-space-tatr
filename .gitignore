@@ -27,3 +27,23 @@ output_*_final/
 *.safetensors
 *.json
 *.jinja
+
+# local-only scripts, not for public repo
+configs/llama8B_r16_tv_ours224.py
+download_llama3.py
+eval_scripts/contamination_cv_diagnostic.py
+eval_scripts/core_space_common.py
+eval_scripts/debug_key_matching.py
+eval_scripts/debug_key_matching2.py
+eval_scripts/nli_check.py
+eval_scripts/nli_pilot_proposed.py
+eval_scripts/proposed_merge_torch.py
+eval_scripts/stage0_synthetic_sanity.py
+eval_scripts/stage10a_ratio_phi_correlation.py
+eval_scripts/stage1_core_space_check.py
+eval_scripts/stage3_merge_plumbing.py
+extract_heads.py
+final_test.py
+fix_sick.py
+train_lora16.py
+train_lora24.py
